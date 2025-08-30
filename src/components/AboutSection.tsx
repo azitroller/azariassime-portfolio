@@ -23,14 +23,14 @@ const AboutSection = () => {
 
   const expertise = [
     {
-      title: "User centric design",
-      description: "Creating engaging and intuitive experiences through cohesive UX and design systems that elevate brands.",
-      skills: ["user-experience", "web-design", "app-design", "design systems", "responsive-design"]
+      title: "Advanced Manufacturing",
+      description: "Designing precision fixtures, automated testing systems, and innovative manufacturing solutions using industry-leading CAD tools and simulation software.",
+      skills: ["Siemens NX", "SolidWorks", "CATIA", "Fusion 360 CAM", "CNC Machining", "Additive Manufacturing"]
     },
     {
-      title: "Visual design",
-      description: "Developing clear and engaging visuals that enhance your brand and connect with your audience effectively.",
-      skills: ["vector-based", "visual-storytelling", "brand-identity", "minimal"]
+      title: "Aerospace Engineering",
+      description: "Developing propulsion systems, analyzing aerodynamics, and optimizing designs for supersonic applications through advanced computational fluid dynamics.",
+      skills: ["ANSYS Fluent", "COMSOL", "Compressible Flow", "Propulsion Systems", "CFD Analysis", "Thermal Validation"]
     }
   ];
 

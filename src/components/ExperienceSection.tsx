@@ -24,39 +24,39 @@ const ExperienceSection = () => {
 
   const experiences = [
     {
-      title: "Senior UX/UI Designer",
-      company: "TechCorp Solutions",
-      location: "Kuala Lumpur, Malaysia",
-      period: "2022 - Present",
-      description: "Leading design initiatives for fintech products, creating comprehensive design systems, and mentoring junior designers. Increased user engagement by 60% through data-driven design decisions.",
+      title: "Manufacturing Engineering Intern",
+      company: "INFICON",
+      location: "East Syracuse, NY",
+      period: "Jan 2024 - Apr 2024",
+      description: "Designed custom fixtures in Siemens NX, automated valve testing with Python + DAQ integration, and improved Gas Chromatography system reliability by 23%. Used COMSOL & ANSYS for thermal/structural validation.",
       achievements: [
-        "Led redesign of core banking platform",
-        "Established design system used across 5 products",
-        "Mentored 3 junior designers"
+        "Designed custom fixtures in Siemens NX",
+        "Automated valve testing with Python + DAQ",
+        "Improved GC system reliability by 23%"
       ]
     },
     {
-      title: "UX/UI Designer",
-      company: "Digital Innovations",
-      location: "Kuala Lumpur, Malaysia",
-      period: "2020 - 2022",
-      description: "Designed user interfaces for web and mobile applications, conducted user research, and collaborated with cross-functional teams to deliver user-centered solutions.",
+      title: "Mechanical Engineering Intern",
+      company: "INFICON",
+      location: "East Syracuse, NY", 
+      period: "May 2024 - Aug 2024",
+      description: "Designed mounting systems for RGA sensor integration on legged robots, developed gasket sealing solutions for aerospace systems, and optimized processes with tolerance stack-ups & GD&T.",
       achievements: [
-        "Improved conversion rates by 35%",
-        "Conducted 50+ user interviews",
-        "Delivered 15+ product launches"
+        "Designed RGA sensor mounting systems",
+        "Developed aerospace gasket solutions",
+        "Innovated snap-fit joints for durability"
       ]
     },
     {
-      title: "Junior UI Designer",
-      company: "StartupHub",
-      location: "Petaling Jaya, Malaysia",
-      period: "2019 - 2020",
-      description: "Created visual designs for startup clients, developed brand identities, and learned the fundamentals of user experience design in a fast-paced environment.",
+      title: "Aerogators Team Member",
+      company: "University of Florida",
+      location: "Gainesville, FL",
+      period: "Sept 2023 - Present",
+      description: "Integrated advanced manufacturing into supersonic interceptor engine design, simulated propulsion systems with ANSYS Fluent, and modeled optimizations for thrust, size, and efficiency.",
       achievements: [
-        "Designed for 20+ startup clients",
-        "Created 10+ brand identities",
-        "Mastered design fundamentals"
+        "Supersonic interceptor engine design",
+        "ANSYS Fluent propulsion simulations",
+        "Thrust and efficiency optimizations"
       ]
     }
   ];
@@ -74,10 +74,10 @@ const ExperienceSection = () => {
             Experience
           </h2>
           <h3 className="text-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-8">
-            Professional Journey
+            Engineering Journey
           </h3>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Over 5 years of experience crafting digital experiences that make a difference
+            Aerospace Engineering student with practical manufacturing and design experience
           </p>
         </div>
 
@@ -143,10 +143,10 @@ const ExperienceSection = () => {
         <div className={`text-center mt-16 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
           <div className="bg-gradient-primary p-8 rounded-2xl text-center">
             <h4 className="text-2xl font-bold text-white mb-4">
-              Want to know more about my experience?
+              Ready to collaborate on engineering projects?
             </h4>
             <p className="text-white/90 mb-6">
-              Download my complete resume for detailed information about my skills and projects.
+              Download my complete resume for detailed information about my technical skills and certifications.
             </p>
             <button className="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-white/90 transition-all duration-300 inline-flex items-center gap-2">
               Download Resume

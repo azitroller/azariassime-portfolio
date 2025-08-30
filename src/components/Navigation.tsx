@@ -38,7 +38,7 @@ const Navigation = () => {
               onClick={() => scrollToSection('hero')}
               className="text-2xl font-bold text-foreground hover:text-primary transition-colors duration-300"
             >
-              Dinidu.
+              Azarias.
             </button>
           </div>
 

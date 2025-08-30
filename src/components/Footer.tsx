@@ -8,20 +8,20 @@ const Footer = () => {
           {/* Logo and Copyright */}
           <div className="flex items-center gap-8">
             <div className="text-2xl font-bold text-foreground">
-              Dinidu.
+              Azarias.
             </div>
             <p className="text-sm text-muted-foreground">
-              © {currentYear} Dinidu Missaka. All rights reserved.
+              © {currentYear} Azarias Sime. All rights reserved.
             </p>
           </div>
 
           {/* Contact Link */}
           <div className="flex items-center gap-6">
             <a
-              href="mailto:dinidumissaka@gmail.com"
+              href="mailto:Azarias.sime@ufl.edu"
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
-              dinidumissaka@gmail.com
+              Azarias.sime@ufl.edu
             </a>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

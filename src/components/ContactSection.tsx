@@ -56,26 +56,26 @@ const ContactSection = () => {
     {
       name: "Email",
       icon: Mail,
-      href: "mailto:dinidumissaka@gmail.com",
-      label: "dinidumissaka@gmail.com"
+      href: "mailto:Azarias.sime@ufl.edu",
+      label: "Azarias.sime@ufl.edu"
     },
     {
       name: "LinkedIn",
       icon: Linkedin,
-      href: "https://linkedin.com/in/dinidumissaka",
-      label: "linkedin.com/in/dinidumissaka"
+      href: "https://linkedin.com/in/azarias-sime-01823624a",
+      label: "linkedin.com/in/azarias-sime-01823624a"
     },
     {
-      name: "Twitter",
+      name: "Phone",
       icon: Twitter,
-      href: "https://twitter.com/dinidumissaka",
-      label: "@dinidumissaka"
+      href: "tel:+14157456161",
+      label: "(415) 745-6161"
     },
     {
       name: "GitHub",
       icon: Github,
-      href: "https://github.com/dinidumissaka",
-      label: "github.com/dinidumissaka"
+      href: "https://github.com/azarias-sime",
+      label: "github.com/azarias-sime"
     }
   ];
 
@@ -180,8 +180,8 @@ const ContactSection = () => {
               </h4>
               
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                I'm currently available for freelance projects and full-time opportunities. 
-                Whether you have a project in mind or just want to connect, I'd love to hear from you.
+                I'm currently seeking internships and full-time opportunities in aerospace engineering and manufacturing. 
+                Whether you have a project in mind or want to discuss collaboration, I'd love to connect.
               </p>
 
               <div className="space-y-6">

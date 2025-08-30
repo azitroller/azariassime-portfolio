@@ -79,7 +79,7 @@ const HeroSection = () => {
       <div ref={heroRef} className="relative z-10 text-center section-padding max-w-5xl mx-auto">
         <div className="mb-6 animate-fade-in">
           <p className="text-sm md:text-base text-muted-foreground font-medium mb-2">
-            Experience Designer & Visual Storyteller
+            Aerospace Engineer & Manufacturing Innovation Specialist
           </p>
           <div className="flex items-center justify-center gap-2">
             <div className="w-2 h-2 bg-primary rounded-full animate-glow-pulse" />
@@ -87,13 +87,13 @@ const HeroSection = () => {
         </div>
 
         <h1 className="hero-text text-4xl md:text-6xl lg:text-7xl xl:text-8xl mb-8 animate-fade-in">
-          Crafting people friendly{" "}
-          <span className="text-gradient">digital journeys!</span>
+          Engineering tomorrow's{" "}
+          <span className="text-gradient">aerospace innovations!</span>
         </h1>
 
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in">
-          A Senior UX & UI Designer based in Kuala Lumpur with over 5 years of experience, 
-          crafting user-centric fintech and web experiences. Blending product thinking with visual design.
+          Aerospace Engineering student at University of Florida with hands-on experience in manufacturing engineering, 
+          CAD design, and advanced simulation. Passionate about integrating cutting-edge manufacturing into aerospace innovation.
         </p>
 
         <div className="animate-fade-in">
