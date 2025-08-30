@@ -164,7 +164,7 @@
   }
 
   .floating-card {
-    @apply animate-float drop-shadow-soft;
+    @apply animate-float shadow-soft;
   }
 
   .text-gradient {
