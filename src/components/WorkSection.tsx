@@ -24,32 +24,32 @@ const WorkSection = () => {
 
   const projects = [
     {
-      title: "Booking Platform Redesign",
-      description: "Complete UX/UI redesign for a consultation booking platform, improving user flow and increasing conversions by 45%.",
-      category: "UX/UI Design",
+      title: "Automated Valve Test Platform",
+      description: "Developed a Python-driven automation system to test aerospace grade valves under extreme pressure and temperature conditions.",
+      category: "Aerospace Testing",
       year: "2024",
-      technologies: ["Figma", "Prototyping", "User Research"]
+      technologies: ["High-Pressure", "High-Temperature Testing", "Python"]
     },
     {
-      title: "Fintech Mobile App",
-      description: "Designed a comprehensive mobile banking application with focus on financial literacy and gamification elements.",
-      category: "Mobile Design",
+      title: "RGA Sensor Integration with Unitree Go2 Robot",
+      description: "Designed and simulated a robust mounting system to integrate a Residual Gas Analyzer sensor onto a quadruped robot.",
+      category: "Robotics Integration",
+      year: "2024",
+      technologies: ["CAD Design & Simulation", "Vibration Isolation", "Robotics Integration"]
+    },
+    {
+      title: "UAV Propulsion Optimization via High-Fidelity Simulation",
+      description: "Conducted advanced CFD, combustion, and acoustic simulations of UAV propulsion systems.",
+      category: "Aerospace Simulation",
       year: "2023",
-      technologies: ["Mobile Design", "Design System", "React Native"]
+      technologies: ["ANSYS Fluent", "LMS Virtual.Lab", "CFD & Combustion Modeling"]
     },
     {
-      title: "Analytics Dashboard",
-      description: "Created an intuitive data visualization platform for business intelligence with real-time reporting capabilities.",
-      category: "Web Design",
+      title: "Vibration-Based Fatigue Risk Detection for NASA's MSolo Mass Spectrometer",
+      description: "Developed an advanced algorithm using FFT and machine learning to detect fatigue risks in real-time for NASA's mass spectrometer systems.",
+      category: "NASA Research",
       year: "2023",
-      technologies: ["Data Visualization", "Dashboard Design", "Vue.js"]
-    },
-    {
-      title: "Automation Platform",
-      description: "Developed the complete design system and user interface for a workflow automation SaaS platform.",
-      category: "Product Design",
-      year: "2022",
-      technologies: ["Design Systems", "SaaS", "User Testing"]
+      technologies: ["FFT", "Machine Learning", "Real-Time Anomaly Detection"]
     }
   ];
 
