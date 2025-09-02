@@ -45,12 +45,6 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <button
-              onClick={() => scrollToSection('work')}
-              className="text-foreground hover:text-primary transition-colors duration-300"
-            >
-              Cases
-            </button>
-            <button
               onClick={() => scrollToSection('about')}
               className="text-foreground hover:text-primary transition-colors duration-300"
             >
@@ -61,6 +55,12 @@ const Navigation = () => {
               className="text-foreground hover:text-primary transition-colors duration-300"
             >
               Resume
+            </button>
+            <button
+              onClick={() => scrollToSection('work')}
+              className="text-foreground hover:text-primary transition-colors duration-300"
+            >
+              Projects
             </button>
             <button
               onClick={() => scrollToSection('contact')}
@@ -86,12 +86,6 @@ const Navigation = () => {
           <div className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border">
             <div className="section-padding py-4 space-y-4">
               <button
-                onClick={() => scrollToSection('work')}
-                className="block w-full text-left text-foreground hover:text-primary transition-colors duration-300"
-              >
-                Cases
-              </button>
-              <button
                 onClick={() => scrollToSection('about')}
                 className="block w-full text-left text-foreground hover:text-primary transition-colors duration-300"
               >
@@ -102,6 +96,12 @@ const Navigation = () => {
                 className="block w-full text-left text-foreground hover:text-primary transition-colors duration-300"
               >
                 Resume
+              </button>
+              <button
+                onClick={() => scrollToSection('work')}
+                className="block w-full text-left text-foreground hover:text-primary transition-colors duration-300"
+              >
+                Projects
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
