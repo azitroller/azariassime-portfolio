@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,11 +18,20 @@ const Navigation = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: sectionId } });
+      return;
+    }
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
       setIsMobileMenuOpen(false);
     }
+  };
+
+  const handleProjectsClick = () => {
+    navigate('/projects');
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -57,7 +69,7 @@ const Navigation = () => {
               Resume
             </button>
             <button
-              onClick={() => scrollToSection('work')}
+              onClick={handleProjectsClick}
               className="text-foreground hover:text-primary transition-colors duration-300"
             >
               Projects
@@ -98,7 +110,7 @@ const Navigation = () => {
                 Resume
               </button>
               <button
-                onClick={() => scrollToSection('work')}
+                onClick={handleProjectsClick}
                 className="block w-full text-left text-foreground hover:text-primary transition-colors duration-300"
               >
                 Projects
