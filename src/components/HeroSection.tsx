@@ -13,6 +13,11 @@ const HeroSection = () => {
       }
     };
 
+    // Debug image paths in production
+    if (import.meta.env.PROD) {
+      console.debug('HeroSection mounted - checking image paths');
+    }
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
