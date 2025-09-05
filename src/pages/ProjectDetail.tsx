@@ -188,8 +188,9 @@ class AdvancedDAQReader:
                  sample_rate=10, buffer_size=10000):
         self.pressure_channels = pressure_channels
         self.temp_channels = temp_channels
-        self.calibration_coeffs = self._load_calibration()`,
-          fullCode: `import nidaqmx
+        self.calibration_coeffs = self._load_calibration()
+
+class StatisticalFailureDetector:
 import numpy as np
 import sqlite3
 import pandas as pd
