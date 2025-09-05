@@ -18,6 +18,12 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'heading': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+				'body': ['Work Sans', 'system-ui', 'sans-serif'],
+				'mono': ['JetBrains Mono', 'monospace'],
+				'math': ['STIX Two Math', 'Computer Modern', 'serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
