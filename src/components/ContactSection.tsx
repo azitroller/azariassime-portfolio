@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Mail, Linkedin, Twitter, Github } from "lucide-react";
+import { Mail, Linkedin, Phone, Github } from "lucide-react";
 
 const ContactSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -37,7 +37,7 @@ const ContactSection = () => {
     },
     {
       name: "Phone",
-      icon: Twitter,
+      icon: Phone,
       href: "tel:+14157456161",
       label: "(415) 745-6161"
     },
@@ -96,7 +96,9 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h5 className="font-semibold text-foreground text-lg">{social.name}</h5>
-                    <p className="text-muted-foreground">{social.label}</p>
+                    {(social.name === "Email" || social.name === "Phone") && (
+                      <p className="text-muted-foreground">{social.label}</p>
+                    )}
                   </div>
                 </a>
               ))}
