@@ -85,7 +85,7 @@ export const CodePreview = ({ title, preview, fullCode, language = 'python' }: C
         <div className="mt-3 flex justify-end">
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700 border-0">
+              <Button variant="outline" size="sm" className="text-gray-300 border-gray-600 hover:bg-gray-800">
                 Expand Full Code
               </Button>
             </DialogTrigger>
