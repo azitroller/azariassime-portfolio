@@ -1952,7 +1952,8 @@ const ProjectDetail = () => {
 
   const renderSection = (section: any, index: number) => {
     const isEven = index % 2 === 0;
-    const textFirst = section.type === "text-left" ? isEven : !isEven;
+    const hasImage = section.image;
+    const imagePosition = hasImage && typeof section.image === 'object' ? section.image.position : (isEven ? 'right' : 'left');
 
     return (
       <section 
@@ -1961,97 +1962,20 @@ const ProjectDetail = () => {
         style={{ animationDelay: `${index * 0.2}s` }}
       >
         <div className="container mx-auto px-4">
-          <div className={`grid lg:grid-cols-2 gap-12 items-start ${textFirst ? '' : 'lg:grid-flow-col-dense'}`}>
-            {/* Text Content */}
-            <div className={`space-y-6 ${textFirst ? '' : 'lg:col-start-2'}`}>
-              <div className="engineering-callout">
-                <h2 className="text-3xl font-bold mb-6 text-primary">{section.title}</h2>
-                <div className="prose prose-lg max-w-none text-foreground/90 leading-relaxed">
-                  {section.content.split('\n\n').map((paragraph: string, pIndex: number) => (
-                    <p key={pIndex} className="mb-4">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mathematical Equations */}
-              {section.equations && section.equations.map((eq: any, eqIndex: number) => (
-                <MathEquation
-                  key={eqIndex}
-                  equation={eq.equation}
-                  variables={eq.variables}
-                />
-              ))}
-
-              {/* Engineering Standards Callout */}
-              {section.standards && (
-                <div className="engineering-callout">
-                  <h4 className="font-semibold mb-2">Engineering Standards</h4>
-                  <ul className="space-y-1 text-sm">
-                    {section.standards.map((standard: string, sIndex: number) => (
-                      <li key={sIndex} className="flex items-center">
-                        <ChevronRight className="w-4 h-4 mr-2 text-accent" />
-                        <span className="metrics-badge">{standard}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Pull Quote */}
-              {section.pullQuote && (
-                <blockquote className="pull-quote">
-                  "{section.pullQuote}"
-                </blockquote>
-              )}
-
-              {/* Metrics */}
-              {section.metrics && (
-                <div className="flex flex-wrap gap-2">
-                  {section.metrics.map((metric: any, mIndex: number) => (
-                    <span key={mIndex} className="metrics-badge">
-                      {metric.label}: {metric.value}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Visual/Code Content */}
-            <div className={`${textFirst ? 'lg:col-start-2' : ''}`}>
-              {section.visual && section.visual.type === "terminal" && (
-                <div className="bg-[#0D1117] rounded-lg border border-gray-800 overflow-hidden shadow-lg">
-                  <div className="flex items-center px-4 py-2 bg-[#21262d] border-b border-gray-800">
-                    <div className="flex space-x-2">
-                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    </div>
-                    <span className="ml-4 text-sm text-gray-400">Terminal</span>
-                  </div>
-                  <div className="p-4">
-                    <pre className="text-sm text-gray-100 font-mono whitespace-pre-wrap">
-                      {section.visual.content}
-                    </pre>
-                  </div>
-                </div>
-              )}
-
-              {section.codePreview && (
-                <CodePreview
-                  title={section.codePreview.title}
-                  preview={section.codePreview.preview}
-                  fullCode={section.codePreview.fullCode}
-                />
-              )}
-
-              {section.image && (
+          {/* Adaptive text flow layout for sections with images */}
+          {hasImage ? (
+            <div className="relative">
+              {/* Image positioned as float */}
+              <div className={`mb-6 lg:mb-0 ${
+                imagePosition === 'left' 
+                  ? 'lg:float-left lg:w-1/2 lg:pr-8' 
+                  : 'lg:float-right lg:w-1/2 lg:pl-8'
+              }`}>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <img 
                     src={typeof section.image === 'string' ? section.image : section.image.src} 
                     alt={typeof section.image === 'string' ? section.title : section.image.alt}
-                    className="w-full h-auto"
+                    className="w-full h-80 object-cover"
                   />
                   {typeof section.image === 'object' && section.image.alt && (
                     <div className="bg-muted/50 px-4 py-2 text-sm text-muted-foreground">
@@ -2059,9 +1983,153 @@ const ProjectDetail = () => {
                     </div>
                   )}
                 </div>
-              )}
+              </div>
+
+              {/* Content that flows around image and then expands */}
+              <div className="space-y-6">
+                <div className="engineering-callout">
+                  <h2 className="text-3xl font-bold mb-6 text-primary">{section.title}</h2>
+                  <div className="prose prose-lg max-w-none text-foreground/90 leading-relaxed">
+                    {section.content.split('\n\n').map((paragraph: string, pIndex: number) => (
+                      <p key={pIndex} className="mb-4">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mathematical Equations */}
+                {section.equations && section.equations.map((eq: any, eqIndex: number) => (
+                  <MathEquation
+                    key={eqIndex}
+                    equation={eq.equation}
+                    variables={eq.variables}
+                  />
+                ))}
+
+                {/* Engineering Standards Callout */}
+                {section.standards && (
+                  <div className="engineering-callout">
+                    <h4 className="font-semibold mb-2">Engineering Standards</h4>
+                    <ul className="space-y-1 text-sm">
+                      {section.standards.map((standard: string, sIndex: number) => (
+                        <li key={sIndex} className="flex items-center">
+                          <ChevronRight className="w-4 h-4 mr-2 text-accent" />
+                          <span className="metrics-badge">{standard}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Pull Quote */}
+                {section.pullQuote && (
+                  <blockquote className="pull-quote">
+                    "{section.pullQuote}"
+                  </blockquote>
+                )}
+
+                {/* Metrics */}
+                {section.metrics && (
+                  <div className="flex flex-wrap gap-2">
+                    {section.metrics.map((metric: any, mIndex: number) => (
+                      <span key={mIndex} className="metrics-badge">
+                        {metric.label}: {metric.value}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Clear float to ensure proper layout flow */}
+              <div className="clear-both"></div>
             </div>
-          </div>
+          ) : (
+            /* Grid layout for sections without images */
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="space-y-6 lg:col-span-2">
+                <div className="engineering-callout">
+                  <h2 className="text-3xl font-bold mb-6 text-primary">{section.title}</h2>
+                  <div className="prose prose-lg max-w-none text-foreground/90 leading-relaxed">
+                    {section.content.split('\n\n').map((paragraph: string, pIndex: number) => (
+                      <p key={pIndex} className="mb-4">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mathematical Equations */}
+                {section.equations && section.equations.map((eq: any, eqIndex: number) => (
+                  <MathEquation
+                    key={eqIndex}
+                    equation={eq.equation}
+                    variables={eq.variables}
+                  />
+                ))}
+
+                {/* Engineering Standards Callout */}
+                {section.standards && (
+                  <div className="engineering-callout">
+                    <h4 className="font-semibold mb-2">Engineering Standards</h4>
+                    <ul className="space-y-1 text-sm">
+                      {section.standards.map((standard: string, sIndex: number) => (
+                        <li key={sIndex} className="flex items-center">
+                          <ChevronRight className="w-4 h-4 mr-2 text-accent" />
+                          <span className="metrics-badge">{standard}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Pull Quote */}
+                {section.pullQuote && (
+                  <blockquote className="pull-quote">
+                    "{section.pullQuote}"
+                  </blockquote>
+                )}
+
+                {/* Metrics */}
+                {section.metrics && (
+                  <div className="flex flex-wrap gap-2">
+                    {section.metrics.map((metric: any, mIndex: number) => (
+                      <span key={mIndex} className="metrics-badge">
+                        {metric.label}: {metric.value}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Visual/Code Content for non-image sections */}
+                {section.visual && section.visual.type === "terminal" && (
+                  <div className="bg-[#0D1117] rounded-lg border border-gray-800 overflow-hidden shadow-lg">
+                    <div className="flex items-center px-4 py-2 bg-[#21262d] border-b border-gray-800">
+                      <div className="flex space-x-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      </div>
+                      <span className="ml-4 text-sm text-gray-400">Terminal</span>
+                    </div>
+                    <div className="p-4">
+                      <pre className="text-sm text-gray-100 font-mono whitespace-pre-wrap">
+                        {section.visual.content}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+
+                {section.codePreview && (
+                  <CodePreview
+                    title={section.codePreview.title}
+                    preview={section.codePreview.preview}
+                    fullCode={section.codePreview.fullCode}
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     );
