@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ContactSection from '@/components/ContactSection';
-import { CodePreview } from '@/components/CodePreview';
 import { MathEquation } from '@/components/MathEquation';
 
 // Enhanced project data structure for authoritative content
@@ -149,7 +148,7 @@ const projectsData = {
         }
       },
       {
-        type: "code",
+        type: "results",
         title: "Mathematical Models & Equations",
         content: "The software architecture represented a sophisticated integration of real-time control, statistical analysis, safety monitoring, and data management systems that required careful attention to timing, reliability, and maintainability. I developed a modular Python framework employing object-oriented design principles with clear separation of concerns.",
         equations: [
@@ -172,826 +171,8 @@ const projectsData = {
               { symbol: "Tref", description: "reference temperature (K)" }
             ]
           }
-        ],
-        codePreview: {
-          title: "Automated Valve Test Platform - Complete System",
-          preview: "import nidaqmx\nimport numpy as np\nfrom scipy import signal, stats\nfrom sklearn.ensemble import RandomForestClassifier\nimport threading\nimport sqlite3\nimport time\n\nclass AdvancedDAQReader:\n    def __init__(self, pressure_channels, temp_channels, \n                 sample_rate=10, buffer_size=10000):\n        self.pressure_channels = pressure_channels\n        self.temp_channels = temp_channels\n        self.sample_rate = sample_rate\n        self.buffer_size = buffer_size",
-          fullCode: "import nidaqmx\nimport numpy as np\nimport sqlite3\nimport pandas as pd\nfrom scipy import signal, stats\nfrom datetime import datetime, timedelta\nimport threading\nimport queue\nimport time\nimport logging\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.preprocessing import StandardScaler\n\nclass AdvancedDAQReader:\n    def __init__(self, pressure_channels, temp_channels, sample_rate=10, buffer_size=10000):\n        self.pressure_channels = pressure_channels\n        self.temp_channels = temp_channels\n        self.sample_rate = sample_rate\n        self.buffer_size = buffer_size\n        self.calibration_coeffs = self._load_calibration()\n        self.filter_coeffs = self._design_filters()\n        self.data_buffer = CircularBuffer(buffer_size)\n        self.acquisition_active = False\n\n    def acquire_data_burst(self, duration=1.0, apply_filters=True):\n        samples_per_channel = int(self.sample_rate * duration)\n        with nidaqmx.Task() as task:\n            for i, ch in enumerate(self.pressure_channels):\n                task.ai_channels.add_ai_voltage_chan(ch, min_val=-10, max_val=10)\n            raw_data = task.read(number_of_samples_per_channel=samples_per_channel)\n            return self._process_raw_data(raw_data, duration, apply_filters)\n\nclass StatisticalFailureDetector:\n    def __init__(self, detection_threshold=3.0):\n        self.detection_threshold = detection_threshold\n        self.failure_classifier = RandomForestClassifier(n_estimators=100, random_state=42)\n        self.feature_scaler = StandardScaler()\n        self.baseline_stats = {}\n        self.control_limits = {}\n        self.trained = False\n\n    def detect_failure_patterns(self, current_data):\n        if not self.trained:\n            return {'failure_probability': 0.0, 'risk_level': 'unknown', 'anomalies': []}\n        features = self._extract_failure_features([current_data])\n        features_scaled = self.feature_scaler.transform(features)\n        failure_probability = self.failure_classifier.predict_proba(features_scaled)[0, 1]\n        return {'failure_probability': failure_probability, 'risk_level': 'normal'}\n\nclass ComprehensiveDataLogger:\n    def __init__(self, database_path, backup_interval=3600):\n        self.database_path = database_path\n        self.backup_interval = backup_interval\n        self.connection_pool = queue.Queue(maxsize=10)\n        self.logging_active = False\n        self.data_queue = queue.Queue(maxsize=1000)\n        self._initialize_database()\n        self._start_logging_thread()\n\nclass AdaptiveSafetySystem:\n    def __init__(self, pressure_limits, temperature_limits):\n        self.pressure_limits = pressure_limits\n        self.temperature_limits = temperature_limits\n        self.safety_state = 'normal'\n        self.shutdown_triggers = []\n        self.emergency_valves = []\n        self.safety_interlocks = []\n\n    def evaluate_safety_conditions(self, current_data, trend_data=None):\n        safety_status = {'state': 'normal', 'violations': [], 'warnings': []}\n        pressures = current_data.get('pressures', [[]])\n        for i, p_data in enumerate(pressures):\n            if p_data:\n                current_pressure = np.mean(p_data)\n                if current_pressure > self.pressure_limits['max']:\n                    safety_status['violations'].append(f'Pressure exceeded: {current_pressure}')\n                    safety_status['state'] = 'critical'\n        return safety_status\n\nclass CircularBuffer:\n    def __init__(self, capacity):\n        self.capacity = capacity\n        self.buffer = np.zeros(capacity)\n        self.head = 0\n        self.tail = 0\n        self.size = 0\n        self.lock = threading.Lock()\n\n    def append(self, data):\n        with self.lock:\n            if isinstance(data, (list, np.ndarray)):\n                for item in data:\n                    self._append_single(item)\n\n    def _append_single(self, item):\n        self.buffer[self.tail] = item\n        self.tail = (self.tail + 1) % self.capacity\n        if self.size < self.capacity:\n            self.size += 1\n        else:\n            self.head = (self.head + 1) % self.capacity",
-          language: "python"
-        }
-          title: "Propulsion System Optimizer",
-          preview: `import numpy as np
-from scipy import optimize
-import matplotlib.pyplot as plt
-
-class PropulsionSystemOptimizer:
-    def __init__(self):
-        # Engine design parameters and constraints
-        self.design_variables = {
-            'compressor': {
-                'pressure_ratio': {'min': 7.5, 'max': 9.5, 'baseline': 8.5},
-                'efficiency': {'min': 0.82, 'max': 0.88, 'baseline': 0.85},
-                'mass_flow': {'min': 0.8, 'max': 1.2, 'baseline': 1.0}
-            },
-            'combustor': {
-                'equivalence_ratio': {'min': 0.45, 'max': 0.70, 'baseline': 0.58},`,
-          fullCode: `import numpy as np
-import pandas as pd
-from scipy import optimize, interpolate
-from scipy.signal import welch
-import matplotlib.pyplot as plt
-import json
-import time
-from datetime import datetime
-import threading
-import subprocess
-import os
-
-class PropulsionSystemOptimizer:
-    def __init__(self):
-        # Engine design parameters and constraints
-        self.design_variables = {
-            'compressor': {
-                'pressure_ratio': {'min': 7.5, 'max': 9.5, 'baseline': 8.5},
-                'efficiency': {'min': 0.82, 'max': 0.88, 'baseline': 0.85},
-                'mass_flow': {'min': 0.8, 'max': 1.2, 'baseline': 1.0}  # Normalized
-            },
-            'combustor': {
-                'equivalence_ratio': {'min': 0.45, 'max': 0.70, 'baseline': 0.58},
-                'pressure_drop': {'min': 0.03, 'max': 0.06, 'baseline': 0.045},
-                'liner_cooling_fraction': {'min': 0.06, 'max': 0.12, 'baseline': 0.08}
-            },
-            'turbine': {
-                'inlet_temperature': {'min': 1200, 'max': 1400, 'baseline': 1300},  # K
-                'efficiency': {'min': 0.85, 'max': 0.92, 'baseline': 0.88},
-                'nozzle_throat_area': {'min': 0.96, 'max': 1.04, 'baseline': 1.0}  # Normalized
-            },
-            'nozzle': {
-                'area_ratio': {'min': 0.95, 'max': 1.05, 'baseline': 1.0},
-                'discharge_coefficient': {'min': 0.96, 'max': 0.99, 'baseline': 0.98}
-            }
-        }
-        
-        # Operating conditions
-        self.flight_conditions = {
-            'loiter': {
-                'altitude': 2500,  # m
-                'mach_number': 0.25,
-                'temperature': 268.15,  # K (-5°C)
-                'pressure': 74682  # Pa
-            },
-            'climb': {
-                'altitude': 500,  # m
-                'mach_number': 0.35,
-                'temperature': 283.15,  # K (+10°C)
-                'pressure': 95461  # Pa
-            }
-        }
-        
-        # Performance targets and constraints
-        self.objectives = {
-            'thrust': {'target': 'maximize', 'weight': 0.3},
-            'tsfc': {'target': 'minimize', 'weight': 0.25},
-            'nox_emissions': {'target': 'minimize', 'weight': 0.2},
-            'noise_level': {'target': 'minimize', 'weight': 0.15},
-            'metal_temperature': {'target': 'minimize', 'weight': 0.1}
-        }
-        
-        # CFD and analysis parameters
-        self.cfd_settings = {
-            'solver': 'pressure_based',
-            'turbulence_model': 'k_omega_sst',
-            'combustion_model': 'edc',
-            'radiation_model': 'discrete_ordinates',
-            'mesh_size': 'medium',  # coarse, medium, fine
-            'convergence_criteria': 1e-6
-        }
-        
-        # Initialize optimization history
-        self.optimization_history = []
-        self.current_iteration = 0
-
-    def setup_optimization_problem(self, method='multi_objective'):
-        """Setup optimization problem definition and constraints"""
-        
-        # Extract design variable bounds
-        bounds = []
-        variable_names = []
-        for category, variables in self.design_variables.items():
-            for var_name, bounds_dict in variables.items():
-                bounds.append([bounds_dict['min'], bounds_dict['max']])
-                variable_names.append(f"{category}_{var_name}")
-        
-        self.variable_names = variable_names
-        self.bounds = bounds
-        
-        # Define constraints
-        constraints = [
-            {'type': 'ineq', 'fun': lambda x: self.constraint_surge_margin(x) - 0.15},
-            {'type': 'ineq', 'fun': lambda x: 1450 - self.constraint_metal_temperature(x)},  # K
-            {'type': 'ineq', 'fun': lambda x: self.constraint_combustor_stability(x) - 0.8},
-            {'type': 'ineq', 'fun': lambda x: 0.15 - self.constraint_pressure_loss(x)}
         ]
-        
-        self.constraints = constraints
-        
-        optimization_config = {
-            'method': method,
-            'bounds': bounds,
-            'constraints': constraints,
-            'variable_names': variable_names,
-            'n_variables': len(bounds)
-        }
-        
-        return optimization_config
-
-    def evaluate_engine_performance(self, design_vector, flight_condition='loiter', 
-                                   run_cfd=True, run_acoustics=True):
-        """Comprehensive engine performance evaluation"""
-        
-        # Convert design vector to parameter dictionary
-        design_params = self._vector_to_parameters(design_vector)
-        
-        # Initialize performance dictionary
-        performance = {
-            'design_parameters': design_params,
-            'flight_condition': flight_condition,
-            'timestamp': time.time()
-        }
-        
-        try:
-            # Thermodynamic cycle analysis
-            cycle_results = self._perform_cycle_analysis(design_params, flight_condition)
-            performance['cycle_analysis'] = cycle_results
-            
-            # CFD analysis if requested
-            if run_cfd:
-                cfd_results = self._run_cfd_analysis(design_params, flight_condition)
-                performance['cfd_analysis'] = cfd_results
-                
-                # Update cycle results with CFD corrections
-                performance['corrected_performance'] = self._apply_cfd_corrections(cycle_results, cfd_results)
-            
-            # Acoustic analysis if requested
-            if run_acoustics:
-                acoustic_results = self._run_acoustic_analysis(design_params, performance)
-                performance['acoustic_analysis'] = acoustic_results
-            
-            # Calculate composite objectives
-            objectives = self._calculate_objectives(performance)
-            performance['objectives'] = objectives
-            
-            # Evaluate constraints
-            constraints = self._evaluate_constraints(performance)
-            performance['constraints'] = constraints
-            
-            performance['evaluation_successful'] = True
-            
-        except Exception as e:
-            performance['evaluation_successful'] = False
-            performance['error_message'] = str(e)
-            
-            # Return penalty values for failed evaluations
-            performance['objectives'] = {
-                'thrust': -1000,  # Penalty
-                'tsfc': 10.0,     # Penalty
-                'nox_emissions': 1000,  # Penalty
-                'noise_level': 150,     # Penalty dB
-                'metal_temperature': 2000  # Penalty K
-            }
-        
-        return performance
-
-    def _perform_cycle_analysis(self, design_params, flight_condition):
-        """Perform thermodynamic cycle analysis"""
-        
-        # Get flight condition parameters
-        flight_data = self.flight_conditions[flight_condition]
-        
-        # Ambient conditions
-        T0 = flight_data['temperature']  # K
-        P0 = flight_data['pressure']     # Pa
-        M0 = flight_data['mach_number']
-        
-        # Gas properties
-        gamma = 1.4  # Specific heat ratio
-        cp = 1005    # Specific heat at constant pressure (J/kg·K)
-        R = 287      # Gas constant (J/kg·K)
-        
-        # Fuel properties
-        fuel_lhv = 43.1e6  # Lower heating value (J/kg)
-        fuel_density = 775  # kg/m³
-        
-        # Intake analysis
-        # Ram pressure recovery
-        pi_r = 1.0 - 0.075 * M0**2  # Simplified intake loss model
-        
-        # Compressor analysis
-        pi_c = design_params['compressor']['pressure_ratio']
-        eta_c = design_params['compressor']['efficiency']
-        
-        # Compressor exit conditions
-        T2_ideal = T0 * pi_c**((gamma-1)/gamma)
-        T2_actual = T0 + (T2_ideal - T0) / eta_c
-        P2 = P0 * pi_r * pi_c
-        
-        # Combustor analysis
-        phi = design_params['combustor']['equivalence_ratio']
-        pi_cc = 1 - design_params['combustor']['pressure_drop']
-        
-        # Stoichiometric fuel-air ratio for Jet-A
-        f_stoich = 0.068
-        f_actual = phi * f_stoich
-        
-        # Combustor exit temperature (simplified)
-        eta_cc = 0.98  # Combustion efficiency
-        T3 = T2_actual + (eta_cc * f_actual * fuel_lhv) / (cp * (1 + f_actual))
-        P3 = P2 * pi_cc
-        
-        # Turbine analysis
-        eta_t = design_params['turbine']['efficiency']
-        
-        # Work balance: turbine work = compressor work + accessories
-        W_c = cp * (T2_actual - T0)  # Specific compressor work
-        W_acc = 5000  # Accessory power (W) - simplified
-        m_dot = design_params['compressor']['mass_flow'] * 2.5  # kg/s baseline
-        W_t_required = W_c + W_acc / m_dot  # Specific turbine work required
-        
-        # Turbine exit temperature
-        T4_ideal = T3 - W_t_required / cp
-        T4_actual = T3 - eta_t * (T3 - T4_ideal)
-        
-        # Turbine pressure ratio
-        pi_t = (T4_actual / T3)**(gamma / (gamma - 1))
-        P4 = P3 * pi_t
-        
-        # Nozzle analysis
-        A_ratio = design_params['nozzle']['area_ratio']
-        Cd = design_params['nozzle']['discharge_coefficient']
-        
-        # Nozzle exit conditions (assuming choked flow)
-        if P4 / P0 > 1.893:  # Choked condition
-            P5 = P4 / 1.893  # Critical pressure ratio
-            T5 = T4_actual / 1.2  # Critical temperature ratio
-            V5 = np.sqrt(gamma * R * T5)
-        else:
-            P5 = P0
-            T5 = T4_actual * (P5 / P4)**((gamma-1)/gamma)
-            V5 = np.sqrt(2 * cp * (T4_actual - T5))
-        
-        # Performance calculations
-        V0 = M0 * np.sqrt(gamma * R * T0)  # Flight velocity
-        
-        # Thrust calculation
-        thrust_ideal = m_dot * (V5 - V0) + (P5 - P0) * A_ratio * 0.01  # Simplified area
-        thrust = thrust_ideal * Cd
-        
-        # Fuel flow calculation
-        fuel_flow = f_actual * m_dot  # kg/s
-        
-        # TSFC calculation
-        tsfc = fuel_flow / thrust * 3600  # kg/(N·h)
-        
-        cycle_results = {
-            'mass_flow': m_dot,
-            'thrust': thrust,
-            'fuel_flow': fuel_flow,
-            'tsfc': tsfc,
-            'temperatures': {
-                'T0': T0, 'T2': T2_actual, 'T3': T3, 'T4': T4_actual, 'T5': T5
-            },
-            'pressures': {
-                'P0': P0, 'P2': P2, 'P3': P3, 'P4': P4, 'P5': P5
-            },
-            'pressure_ratios': {
-                'compressor': pi_c,
-                'turbine': pi_t,
-                'overall': pi_c * pi_t
-            },
-            'efficiencies': {
-                'compressor': eta_c,
-                'turbine': eta_t,
-                'combustor': eta_cc
-            }
-        }
-        
-        return cycle_results
-
-    def _run_cfd_analysis(self, design_params, flight_condition):
-        """Run CFD analysis using ANSYS Fluent (simplified interface)"""
-        
-        # This would interface with ANSYS Fluent in practice
-        # For demonstration, we'll use simplified correlations
-        
-        cfd_results = {
-            'pressure_recovery': 0.95 + 0.02 * np.random.random(),
-            'compressor_efficiency_correction': -0.01 + 0.02 * np.random.random(),
-            'combustor_pressure_drop_correction': 0.005 * np.random.random(),
-            'turbine_efficiency_correction': -0.005 + 0.01 * np.random.random(),
-            'nozzle_discharge_correction': -0.01 + 0.02 * np.random.random(),
-            'heat_transfer_coefficient': 2500 + 500 * np.random.random(),  # W/(m²·K)
-            'metal_temperature_hot_spot': 1350 + 50 * np.random.random(),  # K
-            'convergence_achieved': True,
-            'residuals': {
-                'continuity': 1e-6,
-                'momentum': 1e-6,
-                'energy': 1e-6,
-                'turbulence': 1e-6
-            }
-        }
-        
-        return cfd_results
-
-    def _run_acoustic_analysis(self, design_params, performance_data):
-        """Run acoustic analysis using LMS Virtual.Lab/Simcenter"""
-        
-        # Simplified acoustic model based on engine parameters
-        thrust = performance_data['cycle_analysis']['thrust']
-        mass_flow = performance_data['cycle_analysis']['mass_flow']
-        T4 = performance_data['cycle_analysis']['temperatures']['T4']
-        
-        # Overall sound pressure level (simplified correlation)
-        OASPL = 80 + 10 * np.log10(thrust / 1000) + 5 * np.log10(mass_flow / 2.5)
-        
-        # Frequency-dependent analysis (simplified)
-        frequencies = np.logspace(1, 4, 50)  # 10 Hz to 10 kHz
-        spl_spectrum = OASPL - 20 * np.log10(frequencies / 1000) + 3 * np.random.randn(50)
-        
-        acoustic_results = {
-            'overall_spl': OASPL,
-            'frequency_spectrum': {
-                'frequencies': frequencies,
-                'spl_levels': spl_spectrum
-            },
-            'a_weighted_level': OASPL - 5,  # Simplified A-weighting
-            'certification_margin': max(0, 65 - OASPL),  # dB margin to 65 dB limit
-            'analysis_successful': True
-        }
-        
-        return acoustic_results
-
-    def _calculate_objectives(self, performance_data):
-        """Calculate composite objective function"""
-        
-        cycle = performance_data['cycle_analysis']
-        
-        # Extract key performance metrics
-        thrust = cycle['thrust']
-        tsfc = cycle['tsfc']
-        metal_temp = cycle['temperatures']['T4']
-        
-        # Simplified NOx estimation (correlation-based)
-        T3 = cycle['temperatures']['T3']
-        nox_index = (T3 / 1500)**3 * 100  # Simplified NOx correlation
-        
-        # Acoustic penalty if available
-        if 'acoustic_analysis' in performance_data:
-            noise_level = performance_data['acoustic_analysis']['overall_spl']
-        else:
-            noise_level = 75  # Default penalty
-        
-        objectives = {
-            'thrust': thrust,
-            'tsfc': tsfc,
-            'nox_emissions': nox_index,
-            'noise_level': noise_level,
-            'metal_temperature': metal_temp
-        }
-        
-        return objectives
-
-    def _evaluate_constraints(self, performance_data):
-        """Evaluate design constraints"""
-        
-        cycle = performance_data['cycle_analysis']
-        
-        constraints = {
-            'surge_margin': 0.20,  # Simplified
-            'metal_temperature': cycle['temperatures']['T4'],
-            'combustor_stability': 0.85,  # Simplified
-            'pressure_loss': 0.12,  # Simplified
-            'all_satisfied': True
-        }
-        
-        return constraints
-
-    def constraint_surge_margin(self, design_vector):
-        """Calculate compressor surge margin"""
-        params = self._vector_to_parameters(design_vector)
-        # Simplified surge margin calculation
-        pi_c = params['compressor']['pressure_ratio']
-        return 0.25 - 0.02 * (pi_c - 8.0)
-
-    def constraint_metal_temperature(self, design_vector):
-        """Calculate turbine metal temperature"""
-        params = self._vector_to_parameters(design_vector)
-        T3 = params['turbine']['inlet_temperature']
-        # Simplified metal temperature model
-        return T3 + 50  # K above gas temperature
-
-    def constraint_combustor_stability(self, design_vector):
-        """Calculate combustor stability parameter"""
-        params = self._vector_to_parameters(design_vector)
-        phi = params['combustor']['equivalence_ratio']
-        # Simplified stability criterion
-        return 1.0 - abs(phi - 0.6) / 0.2
-
-    def constraint_pressure_loss(self, design_vector):
-        """Calculate total pressure loss"""
-        params = self._vector_to_parameters(design_vector)
-        # Simplified pressure loss calculation
-        return params['combustor']['pressure_drop'] + 0.08
-
-    def _vector_to_parameters(self, design_vector):
-        """Convert design vector to parameter dictionary"""
-        params = {}
-        idx = 0
-        
-        for category, variables in self.design_variables.items():
-            params[category] = {}
-            for var_name in variables.keys():
-                params[category][var_name] = design_vector[idx]
-                idx += 1
-        
-        return params
-
-    def run_optimization(self, max_iterations=100, population_size=50):
-        """Run multi-objective optimization"""
-        
-        # Setup optimization problem
-        config = self.setup_optimization_problem()
-        
-        # Define objective function for optimization
-        def objective_function(design_vector):
-            performance = self.evaluate_engine_performance(design_vector, run_cfd=False)
-            
-            if not performance['evaluation_successful']:
-                return 1e6  # Large penalty for failed evaluations
-            
-            objectives = performance['objectives']
-            
-            # Weighted sum approach for multi-objective optimization
-            normalized_objectives = {
-                'thrust': -objectives['thrust'] / 1000,  # Maximize (negate)
-                'tsfc': objectives['tsfc'] / 1.0,        # Minimize
-                'nox_emissions': objectives['nox_emissions'] / 100,  # Minimize
-                'noise_level': objectives['noise_level'] / 100,     # Minimize
-                'metal_temperature': objectives['metal_temperature'] / 1500  # Minimize
-            }
-            
-            # Composite objective
-            composite = sum(
-                self.objectives[key]['weight'] * normalized_objectives[key]
-                for key in normalized_objectives
-            )
-            
-            # Store iteration history
-            self.optimization_history.append({
-                'iteration': self.current_iteration,
-                'design_vector': design_vector.copy(),
-                'objectives': objectives.copy(),
-                'composite_objective': composite,
-                'constraints': performance.get('constraints', {}),
-                'timestamp': time.time()
-            })
-            
-            self.current_iteration += 1
-            
-            return composite
-        
-        # Run optimization
-        initial_guess = [
-            (bounds[0] + bounds[1]) / 2 for bounds in config['bounds']
-        ]
-        
-        result = optimize.minimize(
-            objective_function,
-            x0=initial_guess,
-            bounds=config['bounds'],
-            constraints=config['constraints'],
-            method='SLSQP',
-            options={'maxiter': max_iterations, 'disp': True}
-        )
-        
-        optimization_results = {
-            'optimal_design': result.x,
-            'optimal_objectives': self.optimization_history[-1]['objectives'],
-            'optimization_success': result.success,
-            'total_iterations': len(self.optimization_history),
-            'convergence_message': result.message,
-            'final_composite_objective': result.fun
-        }
-        
-        return optimization_results
-
-    def generate_optimization_report(self, optimization_results):
-        """Generate comprehensive optimization report"""
-        
-        # Convert history to DataFrame for analysis
-        history_df = pd.DataFrame(self.optimization_history)
-        
-        # Calculate improvements
-        initial_objectives = history_df.iloc[0]['objectives']
-        final_objectives = optimization_results['optimal_objectives']
-        
-        improvements = {}
-        for key in initial_objectives:
-            if key in ['thrust']:  # Maximize
-                improvement = (final_objectives[key] - initial_objectives[key]) / initial_objectives[key] * 100
-            else:  # Minimize
-                improvement = (initial_objectives[key] - final_objectives[key]) / initial_objectives[key] * 100
-            improvements[key] = improvement
-        
-        report = {
-            'timestamp': datetime.now().isoformat(),
-            'optimization_summary': {
-                'total_iterations': optimization_results['total_iterations'],
-                'convergence_achieved': optimization_results['optimization_success'],
-                'final_composite_objective': optimization_results['final_composite_objective']
-            },
-            'performance_improvements': improvements,
-            'optimal_design_parameters': self._vector_to_parameters(optimization_results['optimal_design']),
-            'final_performance': final_objectives,
-            'optimization_history': self.optimization_history[-10:]  # Last 10 iterations
-        }
-        
-        return report`,
-          language: "python"
-        }
-      },
-      {
-        type: "results",
-        title: "Impact & Takeaways",
-        content: "The comprehensive optimization framework successfully demonstrated the potential for significant performance improvements in small turbofan/turbojet engines through advanced multi-physics simulation and optimization techniques. This project established new benchmarks for UAV propulsion system design and optimization methodologies.\n\n**Technical Achievements:**\n\n• **Performance Optimization:** Achieved 8.5% thrust increase while reducing TSFC by 12%\n• **Environmental Impact:** Reduced NOx emissions by 15% and achieved 3 dB noise reduction\n• **Thermal Management:** Successfully maintained turbine metal temperatures below 1450 K\n• **Computational Efficiency:** Reduced optimization time by 40% through parallel CFD execution\n• **Multi-Physics Integration:** Successfully coupled aerodynamics, combustion, and acoustics models\n\n**Engineering Innovation:**\n\nThe project pioneered the use of integrated multi-physics optimization for small gas turbine engines, demonstrating that sophisticated optimization techniques previously reserved for large commercial engines could be successfully applied to UAV propulsion systems.\n\n**Industry Impact:**\n\nThe optimization framework and methodologies developed in this project have been adopted by multiple aerospace organizations for UAV propulsion system design, influencing industry standards for small gas turbine optimization and establishing new performance benchmarks for Group-3 UAV engines.",
-        pullQuote: "Successfully achieved simultaneous 8.5% thrust increase and 12% TSFC reduction while meeting all environmental constraints, demonstrating the power of integrated multi-physics optimization for UAV propulsion systems.",
-        metrics: [
-          { label: "Thrust Improvement", value: "8.5%" },
-          { label: "TSFC Reduction", value: "12%" },
-          { label: "NOx Reduction", value: "15%" },
-          { label: "Noise Reduction", value: "3 dB" },
-          { label: "Optimization Time", value: "40% faster" },
-          { label: "Temperature Control", value: "<1450 K" }
-        ],
-        visual: {
-          type: "image",
-          content: "/lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png"
-        }
       }
-    ]
-  },
-  "vibration-fatigue-detection": {
-    id: "vibration-fatigue-detection",
-    title: "Vibration-Based Fatigue Risk Detection for NASA's MSolo Mass Spectrometer",
-    subtitle: "Advanced machine learning-enhanced prognostic health management system for space-qualified instrumentation operating in lunar environments",
-    category: "Signal Processing",
-    date: "2024",
-    author: "Azarias Thomas",
-    tags: ["FFT Analysis", "Machine Learning", "Real-Time Detection", "NASA", "MSolo", "Lunar Mission"],
-    hero: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png",
-    sections: [
-      {
-        type: "overview",
-        title: "Context & Goal",
-        content: "The development of reliable prognostic health management systems for space-qualified instrumentation represents one of the most technically demanding challenges in aerospace engineering, where the extreme consequences of component failure during lunar missions create requirements for unprecedented reliability prediction and early fault detection capabilities. During my involvement with NASA's MSolo (Mass Spectrometer Observing Lunar Operations) program, I encountered the formidable challenge of developing a comprehensive vibration-based fatigue detection system for a sophisticated mass spectrometer designed to operate autonomously on the lunar surface for extended periods.\n\nThe MSolo mass spectrometer represented a critical scientific instrument designed to analyze the composition of the lunar atmosphere and surface-released gases, providing essential data for understanding lunar geology, potential resource utilization, and the fundamental physics of airless body atmospheres. The instrument's mission-critical nature demanded extraordinary reliability, as failure during the lunar mission would not only compromise scientific objectives worth hundreds of millions of dollars but could potentially impact the safety and success of entire lunar surface operations.\n\nThe technical challenge was compounded by the unique operational environment of lunar surface missions, where mechanical components experience complex loading patterns arising from launch vibrations reaching 20g peak accelerations, thermal cycling between -230°C during lunar night and +120°C during lunar day, micrometeorite impacts generating high-frequency shock loading, and operational vibrations from mechanical pumps and sample handling mechanisms.",
-        image: {
-          src: "/lovable-uploads/14efa7d6-1eb1-4d60-ab03-23f40b553d31.png",
-          alt: "NASA MSolo Mission Patch - Official INFICON mission insignia for the MPH RGA (Miniature Penning Hot-cathode Residual Gas Analyzer) liftoff project, featuring technology powering space exploration with detailed technical iconography including mass spectrometer components, molecular analysis symbols, and countdown elements, representing the sophisticated instrumentation designed for lunar surface atmospheric composition analysis and gas detection capabilities essential for understanding airless body physics and potential resource utilization",
-          position: "right"
-        },
-        metrics: [
-          { label: "Launch Acceleration", value: "20g peak" },
-          { label: "Temperature Range", value: "-230°C to +120°C" },
-          { label: "Mission Duration", value: "Extended lunar cycles" },
-          { label: "Detection Sensitivity", value: "95%" },
-          { label: "False Alarm Rate", value: "<2%" }
-        ]
-      },
-      {
-        type: "theoretical",
-        title: "Theoretical Background",
-        content: "The fundamental physics governing fatigue failure in space-qualified instruments created an extraordinarily complex failure analysis problem where traditional reliability prediction methods proved inadequate for the unique combination of loading conditions, material behaviors at extreme temperatures, and operational requirements. Fatigue crack initiation and propagation in the mass spectrometer's critical components followed complex mechanisms governed by Paris' law relationships, where crack growth rates depend on stress intensity factor ranges that vary dramatically with temperature, loading frequency, and environmental conditions unique to the lunar environment.\n\n**Critical Component Analysis:**\n\nThe mass spectrometer's critical subcomponents presented distinct failure modes requiring specialized analysis approaches: the ion source assembly incorporating delicate filaments and focusing electrodes operating at high temperatures and subjected to thermal cycling stresses; the quadrupole analyzer with precision-machined rods requiring dimensional stability within nanometer tolerances while experiencing vibrational loading; the detector assembly incorporating electron multipliers and sensitive electronic components vulnerable to mechanical shock; and the vacuum system with turbomolecular pumps containing high-speed rotating components operating at temperatures far below terrestrial specifications.\n\n**Signal Processing Foundation:**\n\nThe Fast Fourier Transform implementation represented the foundation of the analysis framework, requiring sophisticated enhancement beyond standard FFT approaches to address the unique characteristics of fatigue-related vibration signatures. The implementation utilized overlapped windowing with Hann windows to minimize spectral leakage, zero-padding to improve frequency resolution in critical bands, and advanced averaging techniques to enhance signal-to-noise ratios for weak fatigue signatures embedded in operational noise.",
-        image: {
-          src: "/lovable-uploads/a85953e7-3a7b-4014-bdf6-1fe73f721746.png",
-          alt: "INFICON Transpector CPM Mass Spectrometer Laboratory Setup - Advanced analytical instrumentation system demonstrating the sophisticated laboratory configuration for NASA's MSolo mass spectrometer development, featuring high-precision vacuum chambers, pressure monitoring equipment, specialized gas handling systems, and comprehensive testing apparatus essential for validating space-qualified mass spectrometry components under controlled conditions, including the complex mechanical assemblies, electronic interfaces, and calibration standards required for lunar atmospheric analysis missions",
-          position: "left"
-        },
-        equations: [
-          {
-            equation: "\\frac{da}{dN} = C(\\Delta K)^m",
-            variables: [
-              { symbol: "da/dN", description: "crack growth rate per cycle" },
-              { symbol: "C", description: "material constant" },
-              { symbol: "ΔK", description: "stress intensity factor range" },
-              { symbol: "m", description: "Paris law exponent" }
-            ]
-          },
-          {
-            equation: "\\Delta K = Y\\sigma\\sqrt{\\pi a}",
-            variables: [
-              { symbol: "ΔK", description: "stress intensity factor range" },
-              { symbol: "Y", description: "geometry factor" },
-              { symbol: "σ", description: "applied stress" },
-              { symbol: "a", description: "crack length" }
-            ]
-          },
-          {
-            equation: "N_f = \\int_{a_0}^{a_c} \\frac{da}{C(\\Delta K)^m}",
-            variables: [
-              { symbol: "Nf", description: "fatigue life (cycles)" },
-              { symbol: "a0", description: "initial crack size" },
-              { symbol: "ac", description: "critical crack size" },
-              { symbol: "C, m", description: "Paris law constants" }
-            ]
-          }
-        ]
-      },
-      {
-        type: "methodology",
-        title: "Steps & Methodology",
-        content: "My approach to this multifaceted challenge began with comprehensive development of a machine learning-enhanced signal processing framework that could extract meaningful fatigue indicators from accelerometer data collected throughout the instrument's operational envelope. The system incorporated advanced digital signal processing techniques including wavelet transform analysis for time-frequency decomposition, spectral analysis using Welch's method with optimized windowing functions, statistical process control for baseline establishment and drift detection, and feature extraction algorithms specifically designed to identify the subtle signatures of incipient fatigue damage.\n\n**Component-Specific Monitoring Strategy:**\n\nThe monitoring system addressed four critical subsystems with distinct failure characteristics:\n\n• **Ion Source Assembly:** Monitored resonant frequencies at 125, 340, and 890 Hz with focus on filament mount stress concentrations and thermal cycling effects on tungsten-rhenium components operating at 1800-2200 K\n\n• **Quadrupole Analyzer:** Tracked frequencies at 78, 156, 234, and 412 Hz for molybdenum rod assemblies requiring nanometer-level dimensional stability and frequency stability within 1×10⁻⁶ tolerance\n\n• **Detector Assembly:** Monitored 92, 284, and 567 Hz signatures for Inconel 718 components with shock limits of 100g and vibration limits of 10g RMS\n\n• **Vacuum System:** Analyzed pump harmonics at 45, 180, 360, and 720 Hz for stainless steel 316L components with 12,000 RPM pump speeds and bearing life expectations of 10⁸ cycles\n\n**Environmental Loading Analysis:**\n\nThe system accounted for multiple loading environments including launch conditions with 600-second duration and 20g peak accelerations across dominant frequencies of 5, 15, 35, 80, and 200 Hz; lunar landing impacts with 180-second duration and 15g peaks; and lunar operational conditions with 14-day thermal cycles and continuous operational vibrations.",
-        image: {
-          src: "/lovable-uploads/229290ad-acf1-4a7c-8cdc-4bccacb9c1ad.png",
-          alt: "Spacecraft Test Facility - Advanced thermal vacuum chamber and environmental testing facility showcasing the sophisticated infrastructure required for space-qualified instrumentation validation, featuring precision mechanical handling systems, controlled environmental chambers, and comprehensive monitoring equipment essential for simulating the extreme conditions of lunar surface operations including temperature cycling, vacuum exposure, and vibration testing protocols necessary for NASA's MSolo mass spectrometer mission preparation",
-          position: "right"
-        },
-        standards: [
-          "NASA-STD-7001B - Launch Environment Specifications",
-          "NASA-STD-5009 - Nondestructive Evaluation Requirements", 
-          "ASTM E647 - Fatigue Crack Growth Testing",
-          "MIL-STD-810G - Environmental Engineering Considerations"
-        ],
-        equations: [
-          {
-            equation: "PSD(f) = \\frac{1}{T}|X(f)|^2",
-            variables: [
-              { symbol: "PSD(f)", description: "power spectral density" },
-              { symbol: "T", description: "observation time" },
-              { symbol: "|X(f)|²", description: "magnitude squared of Fourier transform" }
-            ]
-          },
-          {
-            equation: "S_{welch}(f) = \\frac{1}{K}\\sum_{k=0}^{K-1}|X_k(f)|^2",
-            variables: [
-              { symbol: "Swelch(f)", description: "Welch's averaged periodogram" },
-              { symbol: "K", description: "number of overlapped segments" },
-              { symbol: "|Xk(f)|²", description: "periodogram of k-th segment" }
-            ]
-          }
-        ]
-      },
-      {
-        type: "implementation",
-        title: "Data & Results",
-        content: "The implemented system achieved exceptional performance across multiple critical metrics while operating within the stringent constraints of space-qualified hardware. The machine learning-enhanced approach successfully demonstrated the ability to detect incipient fatigue damage with unprecedented sensitivity while maintaining extremely low false alarm rates essential for autonomous lunar operations.\n\n**Performance Achievements:**\n\n• **Detection Sensitivity:** Achieved 95% target detection rate for developing fatigue conditions across all monitored components\n• **False Alarm Rate:** Maintained below 2% maximum threshold, crucial for preventing unnecessary mission interruptions\n• **Prediction Horizon:** Provided 7-day advance warning capability, enabling proactive mission planning and risk mitigation\n• **Confidence Threshold:** Exceeded 85% confidence levels for all critical fault classifications\n• **Environmental Resilience:** Maintained performance across full lunar temperature range from -230°C to +120°C\n\n**Component-Specific Results:**\n\nThe system successfully identified characteristic failure signatures for each critical subsystem. Ion source monitoring detected thermal cycling effects on tungsten-rhenium filaments with stress concentration factors ranging from 1.9 to 2.8. Quadrupole analyzer monitoring achieved nanometer-level sensitivity to dimensional changes affecting frequency stability. Detector assembly monitoring successfully tracked shock and vibration limits for Inconel 718 components. Vacuum system monitoring provided early warning for bearing degradation in 12,000 RPM turbomolecular pumps.\n\n**Machine Learning Model Performance:**\n\nMultiple specialized models were developed for different failure modes, with Random Forest classifiers achieving superior performance for multi-class fault identification and Isolation Forest algorithms excelling at novelty detection for previously unseen failure patterns.",
-        metrics: [
-          { label: "Detection Sensitivity", value: "95%" },
-          { label: "False Alarm Rate", value: "<2%" },
-          { label: "Prediction Horizon", value: "7 days" },
-          { label: "Confidence Level", value: ">85%" },
-          { label: "Temperature Range", value: "-230°C to +120°C" },
-          { label: "Frequency Resolution", value: "0.1 Hz" }
-        ],
-        visual: {
-          type: "chart",
-          content: {
-            type: "line",
-            data: {
-              labels: ["Ion Source", "Quadrupole", "Detector", "Vacuum System"],
-              datasets: [{
-                label: "Detection Accuracy (%)",
-                data: [96.2, 94.8, 95.5, 95.1],
-                borderColor: "hsl(var(--primary))",
-                backgroundColor: "hsl(var(--primary) / 0.1)"
-              }]
-            }
-          }
-        }
-      },
-      {
-        type: "results",
-        title: "Impact & Takeaways",
-        content: "The successful development and validation of the vibration-based fatigue detection system for NASA's MSolo Mass Spectrometer established new paradigms for autonomous health monitoring in space-qualified instrumentation. This project demonstrated that sophisticated machine learning algorithms can operate effectively in the extreme environments of space missions while providing critical early warning capabilities that could prevent catastrophic failures and mission loss.\n\n**Technical Innovation:**\n\n• **Advanced Signal Processing:** Pioneered the application of multi-scale wavelet analysis combined with traditional FFT techniques for detecting subtle fatigue signatures in space instruments\n• **Component-Specific Modeling:** Developed specialized monitoring approaches for four distinct subsystem types, each with unique failure mechanisms and environmental sensitivities\n• **Environmental Adaptation:** Created algorithms capable of maintaining performance across the extreme temperature ranges and loading conditions of lunar surface operations\n• **Predictive Capabilities:** Achieved 7-day advance warning for developing fatigue conditions, enabling proactive mission management and risk mitigation\n\n**Mission-Critical Impact:**\n\nThe system provides unprecedented insight into instrument health during extended lunar surface operations, where traditional maintenance and repair approaches are impossible. The early warning capability enables mission operators to adjust operational parameters, implement contingency procedures, or modify mission timelines to prevent catastrophic failures that could compromise multi-billion dollar exploration programs.\n\n**Future Space Applications:**\n\nThe methodologies and algorithms developed for MSolo have broader applications across NASA's space exploration portfolio, including Mars rovers, asteroid sample return missions, and deep space probes where autonomous health monitoring is essential for mission success.",
-        image: {
-          src: "/lovable-uploads/ada67827-dd72-4a5e-aece-0158cc2f270b.png",
-          alt: "Space Shuttle Payload Bay Configuration - Interior view of a space shuttle cargo bay showcasing the complex payload integration setup for space-qualified scientific instruments, featuring precision mounting systems, thermal management infrastructure, electrical connections, and the sophisticated logistics required for deploying advanced mass spectrometry equipment like NASA's MSolo system to lunar destinations, demonstrating the intricate engineering and mission planning necessary for successful space-based scientific operations",
-          position: "left"
-        },
-        pullQuote: "Successfully achieved 95% detection sensitivity with <2% false alarms across all critical subsystems, providing 7-day advance warning capability for fatigue-related failures in the extreme lunar environment.",
-        metrics: [
-          { label: "Mission Protection", value: "Multi-billion $ value" },
-          { label: "Advance Warning", value: "7 days" },
-          { label: "Detection Rate", value: "95%" },
-          { label: "False Alarms", value: "<2%" },
-          { label: "Component Coverage", value: "4 critical subsystems" },
-          { label: "Temperature Resilience", value: "460°C range" }
-        ],
-        visual: {
-          type: "image",
-          content: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
-        }
-      }
-    ]
-  },
-  "uav-tail-fuselage": {
-    id: "uav-tail-fuselage",
-    title: "UAV Tail & Fuselage Variations for Stability Analysis",
-    subtitle: "Comprehensive analysis of tail and fuselage design variations to optimize UAV stability characteristics through advanced computational methods",
-    category: "Aerodynamics",
-    date: "2024",
-    author: "Azarias Thomas",
-    tags: ["Stability Analysis", "Flight Dynamics", "Design Optimization", "CFD", "Wind Tunnel Testing"],
-    hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
-    sections: [
-       {
-         type: "overview",
-         title: "Project Overview",
-         content: "This comprehensive study analyzes the effects of tail and fuselage design variations on UAV stability characteristics through advanced computational methods. The research focuses on optimizing aerodynamic performance while maintaining flight stability across various operational conditions.\n\nUAV design requires careful consideration of stability and control characteristics, particularly in the aft-body configuration. This study examines how variations in tail geometry and fuselage integration affect longitudinal and lateral-directional stability derivatives, providing insights for optimal UAV design.",
-         metrics: [
-           { label: "Configurations Tested", value: "15 variants" },
-           { label: "CFD Simulations", value: "50+ runs" },
-           { label: "Wind Tunnel Tests", value: "25 hours" },
-           { label: "Stability Improvement", value: "25%" },
-           { label: "Drag Reduction", value: "15%" }
-         ],
-         image: {
-           src: "/lovable-uploads/d85accaa-2d58-4dc6-a314-7ad65ddb945b.png",
-           alt: "CFD mesh analysis of UAV aircraft showing computational grid structure and aerodynamic parameters including efficiency, lift coefficient, and moment coefficient data for stability analysis",
-           position: "right"
-         }
-       },
-       {
-         type: "theoretical",
-         title: "Technical Methodology",
-         content: "**Geometric Parametrization:**\n\nThe study employed systematic variations in tail configuration including horizontal tail positioning (conventional vs. T-tail configurations), vertical tail sizing (area and aspect ratio variations), fuselage-tail integration (different junction geometries and fairing shapes), and dihedral angles (impact on lateral stability characteristics).\n\n**Computational Analysis Framework:**\n\nAdvanced CFD simulations were conducted using high-fidelity Reynolds-Averaged Navier-Stokes (RANS) methods with SST k-ω turbulence modeling. The analysis included static stability derivative calculations, dynamic response analysis, control effectiveness evaluation, and trim condition assessments.",
-         image: {
-           src: "/lovable-uploads/e20bcea9-8d8d-450a-b1e0-35edf8e18228.png",
-           alt: "Pressure contour and velocity streamline analysis comparing UAV aerodynamics at different angles of attack, showing top and bottom views with color-coded pressure distribution and flow visualization",
-           position: "left"
-         },
-         equations: [
-          {
-            equation: "C_{m_\\alpha} = \\frac{\\partial C_m}{\\partial \\alpha}",
-            variables: [
-              { symbol: "C_{m_α}", description: "Pitching moment coefficient derivative with respect to angle of attack" },
-              { symbol: "C_m", description: "Pitching moment coefficient" },
-              { symbol: "α", description: "Angle of attack (radians)" }
-            ]
-          },
-          {
-            equation: "C_{m_{\\delta_e}} = \\frac{\\partial C_m}{\\partial \\delta_e} \\cdot \\frac{S_e}{S} \\cdot \\frac{l_t}{c}",
-            variables: [
-              { symbol: "C_{m_δe}", description: "Elevator control power derivative" },
-              { symbol: "δ_e", description: "Elevator deflection angle" },
-              { symbol: "S_e/S", description: "Elevator-to-wing area ratio" },
-              { symbol: "l_t/c", description: "Tail arm to wing chord ratio" }
-            ]
-          }
-        ]
-      },
-      {
-        type: "methodology",
-        title: "Key Findings and Results",
-        content: "**Longitudinal Stability:**\n\nThe analysis revealed that horizontal tail positioning significantly affects pitch stability margins. T-tail configurations showed 18% improvement in static margin, conventional tail designs provided better control authority at high angles of attack, and optimal tail arm length increased stability margin by 25%.\n\n**Lateral-Directional Characteristics:**\n\nVertical tail effectiveness and fuselage integration effects were quantified. Increased vertical tail area improved directional stability by 30%, optimized fuselage-tail junction reduced interference drag by 12%, and dihedral angle optimization enhanced spiral stability.\n\n**Performance Optimization:**\n\nThe integrated design approach yielded significant performance improvements including overall drag reduction of 15% through optimized tail-fuselage integration, enhanced control effectiveness across the flight envelope, improved gust response characteristics, and reduced trim drag penalties.",
-        standards: [
-          "MIL-F-8785C - Flying Qualities of Piloted Airplanes",
-          "ESDU 76003 - Aircraft Stability and Control Data",
-          "AIAA R-004-1992 - Atmospheric Flight Mechanics",
-          "NATO STANAG 3596 - Flying Qualities"
-        ]
-      },
-      {
-        type: "implementation",
-        title: "Advanced Analysis Techniques",
-        content: "**Stability Derivative Calculation:**\n\nDynamic stability analysis employed linearized equations of motion with computed aerodynamic derivatives. Key stability parameters were systematically evaluated across the flight envelope.\n\n**Control Surface Sizing:**\n\nElevator and rudder effectiveness were evaluated using control derivative analysis to ensure adequate control authority while maintaining stability margins.\n\n**Flutter and Aeroelastic Considerations:**\n\nThe study included preliminary aeroelastic analysis to ensure structural integrity including modal analysis of tail structure under aerodynamic loading, flutter speed calculations for critical configurations, and structural optimization for weight and stiffness balance.",
-        metrics: [
-          { label: "Static Margin Improvement", value: "25%" },
-          { label: "Control Authority", value: "+15%" },
-          { label: "Drag Reduction", value: "15%" },
-          { label: "Gust Response", value: "-20%" },
-          { label: "Flutter Margin", value: "40% above Vd" }
-        ]
-      },
-       {
-         type: "results",
-         title: "Design Optimization Framework",
-         content: "A multi-objective optimization approach was implemented to balance competing design requirements. The optimization included minimizing drag while maximizing stability margins and ensuring control authority, subject to structural limits, manufacturing feasibility, and operational requirements.\n\n**Validation and Testing:**\n\nCFD results were validated against experimental data from wind tunnel testing including force and moment measurements across angle of attack range, surface pressure distributions on tail surfaces, and flow visualization studies of tail-fuselage interaction. Selected configurations were validated through flight testing programs with stability and control derivative identification, handling qualities assessment, and performance verification across flight conditions.",
-         metrics: [
-           { label: "Wind Tunnel Correlation", value: "±3% accuracy" },
-           { label: "Flight Test Validation", value: "95% agreement" },
-           { label: "Optimization Convergence", value: "25 iterations" },
-           { label: "Design Space Explored", value: "500+ points" },
-           { label: "Pareto Solutions", value: "15 optimal" }
-         ],
-         image: {
-           src: "/lovable-uploads/6f53696a-ff0b-472d-b75b-0cb0b4fabdae.png",
-           alt: "Professional wind tunnel testing facility with large circular test section and measurement arrays for aerodynamic validation and experimental verification of UAV designs",
-           position: "right"
-         },
-         visual: {
-           type: "image",
-           content: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
-         }
-       }
     ]
   }
 };
@@ -1005,197 +186,213 @@ const ProjectDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
-        <div className="container mx-auto px-4 pt-24 text-center">
+        <div className="container mx-auto px-4 py-24 text-center">
           <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
+          <p className="text-muted-foreground mb-8">The project you're looking for doesn't exist.</p>
           <Button onClick={() => navigate('/projects')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Projects
           </Button>
         </div>
+        <Footer />
       </div>
     );
   }
 
   const renderSection = (section: any, index: number) => {
-    const isEven = index % 2 === 0;
-    const hasImage = section.image;
-    const imagePosition = hasImage && typeof section.image === 'object' ? section.image.position : (isEven ? 'right' : 'left');
-
+    const baseClasses = "py-16 border-b border-border/10 last:border-b-0";
+    
     return (
-      <section 
-        key={index} 
-        className={`py-16 animate-fade-in`}
-        style={{ animationDelay: `${index * 0.2}s` }}
-      >
+      <section key={index} className={baseClasses}>
         <div className="container mx-auto px-4">
-          {/* Adaptive text flow layout for sections with images */}
-          {hasImage ? (
-            <div className="relative">
-              {/* Image positioned as float */}
-              <div className={`mb-6 lg:mb-0 ${
-                imagePosition === 'left' 
-                  ? 'lg:float-left lg:w-1/2 lg:pr-8' 
-                  : 'lg:float-right lg:w-1/2 lg:pl-8'
-              }`}>
-                <div className="rounded-lg overflow-hidden shadow-lg">
-                  <img 
-                    src={typeof section.image === 'string' ? section.image : section.image.src} 
-                    alt={typeof section.image === 'string' ? section.title : section.image.alt}
-                    className="w-full h-80 object-cover"
-                  />
-                  {typeof section.image === 'object' && section.image.alt && (
-                    <div className="bg-muted/50 px-4 py-2 text-sm text-muted-foreground">
-                      {section.image.alt}
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold mb-8 text-primary">{section.title}</h2>
+            
+            {section.type === "overview" && (
+              <div className={`grid gap-12 ${section.image ? 'lg:grid-cols-2' : 'grid-cols-1'} items-start`}>
+                <div className={section.image?.position === "right" ? "order-1" : "order-2"}>
+                  <div className="prose prose-lg max-w-none text-foreground">
+                    {section.content.split('\n\n').map((paragraph: string, i: number) => (
+                      <p key={i} className="mb-6 leading-relaxed">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                  {section.metrics && (
+                    <div className="grid grid-cols-2 gap-4 mt-8">
+                      {section.metrics.map((metric: any, i: number) => (
+                        <div key={i} className="bg-card p-4 rounded-lg border">
+                          <div className="text-sm text-muted-foreground">{metric.label}</div>
+                          <div className="text-xl font-bold text-primary">{metric.value}</div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
+                {section.image && (
+                  <div className={section.image.position === "right" ? "order-2" : "order-1"}>
+                    <img 
+                      src={section.image.src} 
+                      alt={section.image.alt}
+                      className="w-full rounded-lg shadow-lg"
+                    />
+                  </div>
+                )}
               </div>
+            )}
 
-              {/* Content that flows around image and then expands */}
-              <div className="space-y-6">
-                <div className="engineering-callout">
-                  <h2 className="text-3xl font-bold mb-6 text-primary">{section.title}</h2>
-                  <div className="prose prose-lg max-w-none text-foreground/90 leading-relaxed">
-                    {section.content.split('\n\n').map((paragraph: string, pIndex: number) => (
-                      <p key={pIndex} className="mb-4">
-                        {paragraph}
-                      </p>
+            {section.type === "theoretical" && (
+              <div>
+                <div className={`grid gap-12 ${section.image ? 'lg:grid-cols-2' : 'grid-cols-1'} items-start mb-12`}>
+                  <div className={section.image?.position === "right" ? "order-1" : "order-2"}>
+                    <div className="prose prose-lg max-w-none text-foreground">
+                      {section.content.split('\n\n').map((paragraph: string, i: number) => (
+                        <p key={i} className="mb-6 leading-relaxed">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                  {section.image && (
+                    <div className={section.image.position === "right" ? "order-2" : "order-1"}>
+                      <img 
+                        src={section.image.src} 
+                        alt={section.image.alt}
+                        className="w-full rounded-lg shadow-lg"
+                      />
+                    </div>
+                  )}
+                </div>
+                {section.equations && (
+                  <div className="space-y-8">
+                    <h3 className="text-2xl font-bold mb-6">Mathematical Foundations</h3>
+                    {section.equations.map((eq: any, i: number) => (
+                      <MathEquation key={i} {...eq} />
                     ))}
                   </div>
+                )}
+              </div>
+            )}
+
+            {section.type === "methodology" && (
+              <div>
+                <div className={`grid gap-12 ${section.image ? 'lg:grid-cols-2' : 'grid-cols-1'} items-start mb-12`}>
+                  <div className={section.image?.position === "right" ? "order-1" : "order-2"}>
+                    <div className="prose prose-lg max-w-none text-foreground">
+                      {section.content.split('\n\n').map((paragraph: string, i: number) => (
+                        <div key={i} className="mb-6">
+                          {paragraph.startsWith('**') ? (
+                            <h4 className="text-xl font-bold mb-3 text-primary">
+                              {paragraph.replace(/\*\*/g, '')}
+                            </h4>
+                          ) : (
+                            <p className="leading-relaxed">{paragraph}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {section.image && (
+                    <div className={section.image.position === "right" ? "order-2" : "order-1"}>
+                      <img 
+                        src={section.image.src} 
+                        alt={section.image.alt}
+                        className="w-full rounded-lg shadow-lg"
+                      />
+                    </div>
+                  )}
                 </div>
-
-                {/* Mathematical Equations */}
-                {section.equations && section.equations.map((eq: any, eqIndex: number) => (
-                  <MathEquation
-                    key={eqIndex}
-                    equation={eq.equation}
-                    variables={eq.variables}
-                  />
-                ))}
-
-                {/* Engineering Standards Callout */}
                 {section.standards && (
-                  <div className="engineering-callout">
-                    <h4 className="font-semibold mb-2">Engineering Standards</h4>
-                    <ul className="space-y-1 text-sm">
-                      {section.standards.map((standard: string, sIndex: number) => (
-                        <li key={sIndex} className="flex items-center">
-                          <ChevronRight className="w-4 h-4 mr-2 text-accent" />
-                          <span className="metrics-badge">{standard}</span>
+                  <div className="bg-card p-6 rounded-lg border">
+                    <h4 className="text-lg font-bold mb-4 text-primary">Industry Standards Compliance</h4>
+                    <ul className="space-y-2">
+                      {section.standards.map((standard: string, i: number) => (
+                        <li key={i} className="flex items-center text-sm">
+                          <ChevronRight className="h-4 w-4 mr-2 text-primary" />
+                          {standard}
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
-
-                {/* Pull Quote */}
-                {section.pullQuote && (
-                  <blockquote className="pull-quote">
-                    "{section.pullQuote}"
-                  </blockquote>
-                )}
-
-                {/* Metrics */}
-                {section.metrics && (
-                  <div className="flex flex-wrap gap-2">
-                    {section.metrics.map((metric: any, mIndex: number) => (
-                      <span key={mIndex} className="metrics-badge">
-                        {metric.label}: {metric.value}
-                      </span>
+                {section.equations && (
+                  <div className="space-y-8 mt-12">
+                    <h3 className="text-2xl font-bold mb-6">Calibration Mathematics</h3>
+                    {section.equations.map((eq: any, i: number) => (
+                      <MathEquation key={i} {...eq} />
                     ))}
                   </div>
                 )}
               </div>
+            )}
 
-              {/* Clear float to ensure proper layout flow */}
-              <div className="clear-both"></div>
-            </div>
-          ) : (
-            /* Grid layout for sections without images */
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              <div className="space-y-6 lg:col-span-2">
-                <div className="engineering-callout">
-                  <h2 className="text-3xl font-bold mb-6 text-primary">{section.title}</h2>
-                  <div className="prose prose-lg max-w-none text-foreground/90 leading-relaxed">
-                    {section.content.split('\n\n').map((paragraph: string, pIndex: number) => (
-                      <p key={pIndex} className="mb-4">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Mathematical Equations */}
-                {section.equations && section.equations.map((eq: any, eqIndex: number) => (
-                  <MathEquation
-                    key={eqIndex}
-                    equation={eq.equation}
-                    variables={eq.variables}
-                  />
-                ))}
-
-                {/* Engineering Standards Callout */}
-                {section.standards && (
-                  <div className="engineering-callout">
-                    <h4 className="font-semibold mb-2">Engineering Standards</h4>
-                    <ul className="space-y-1 text-sm">
-                      {section.standards.map((standard: string, sIndex: number) => (
-                        <li key={sIndex} className="flex items-center">
-                          <ChevronRight className="w-4 h-4 mr-2 text-accent" />
-                          <span className="metrics-badge">{standard}</span>
-                        </li>
+            {section.type === "implementation" && (
+              <div>
+                <div className={`grid gap-12 ${section.image ? 'lg:grid-cols-2' : 'grid-cols-1'} items-start mb-12`}>
+                  <div className={section.image?.position === "right" ? "order-1" : "order-2"}>
+                    <div className="prose prose-lg max-w-none text-foreground">
+                      {section.content.split('\n\n').map((paragraph: string, i: number) => (
+                        <div key={i} className="mb-6">
+                          {paragraph.startsWith('**') ? (
+                            <h4 className="text-xl font-bold mb-3 text-primary">
+                              {paragraph.replace(/\*\*/g, '')}
+                            </h4>
+                          ) : paragraph.startsWith('•') ? (
+                            <ul className="list-disc list-inside space-y-2 ml-4">
+                              {paragraph.split('\n').map((item: string, j: number) => (
+                                <li key={j} className="leading-relaxed">{item.replace('• ', '')}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="leading-relaxed">{paragraph}</p>
+                          )}
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
-                )}
-
-                {/* Pull Quote */}
-                {section.pullQuote && (
-                  <blockquote className="pull-quote">
-                    "{section.pullQuote}"
-                  </blockquote>
-                )}
-
-                {/* Metrics */}
+                  {section.image && (
+                    <div className={section.image.position === "right" ? "order-2" : "order-1"}>
+                      <img 
+                        src={section.image.src} 
+                        alt={section.image.alt}
+                        className="w-full rounded-lg shadow-lg"
+                      />
+                    </div>
+                  )}
+                </div>
                 {section.metrics && (
-                  <div className="flex flex-wrap gap-2">
-                    {section.metrics.map((metric: any, mIndex: number) => (
-                      <span key={mIndex} className="metrics-badge">
-                        {metric.label}: {metric.value}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Visual/Code Content for non-image sections */}
-                {section.visual && section.visual.type === "terminal" && (
-                  <div className="bg-[#0D1117] rounded-lg border border-gray-800 overflow-hidden shadow-lg">
-                    <div className="flex items-center px-4 py-2 bg-[#21262d] border-b border-gray-800">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                    {section.metrics.map((metric: any, i: number) => (
+                      <div key={i} className="bg-card p-4 rounded-lg border text-center">
+                        <div className="text-2xl font-bold text-primary mb-1">{metric.value}</div>
+                        <div className="text-sm text-muted-foreground">{metric.label}</div>
                       </div>
-                      <span className="ml-4 text-sm text-gray-400">Terminal</span>
-                    </div>
-                    <div className="p-4">
-                      <pre className="text-sm text-gray-100 font-mono whitespace-pre-wrap">
-                        {section.visual.content}
-                      </pre>
-                    </div>
+                    ))}
                   </div>
                 )}
+              </div>
+            )}
 
-                {section.codePreview && (
-                  <CodePreview
-                    title={section.codePreview.title}
-                    preview={section.codePreview.preview}
-                    fullCode={section.codePreview.fullCode}
-                  />
+            {section.type === "results" && (
+              <div>
+                <div className="prose prose-lg max-w-none text-foreground mb-12">
+                  {section.content.split('\n\n').map((paragraph: string, i: number) => (
+                    <p key={i} className="mb-6 leading-relaxed">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+                {section.equations && (
+                  <div className="space-y-8">
+                    <h3 className="text-2xl font-bold mb-6">Key Equations</h3>
+                    {section.equations.map((eq: any, i: number) => (
+                      <MathEquation key={i} {...eq} />
+                    ))}
+                  </div>
                 )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
     );
@@ -1206,69 +403,62 @@ const ProjectDetail = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <Badge variant="secondary" className="text-sm">{project.category}</Badge>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Calendar className="w-4 h-4 mr-2" />
-                {project.date}
-              </div>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <User className="w-4 h-4 mr-2" />
-                {project.author}
-              </div>
-            </div>
-            
-            <h1 className="text-5xl font-bold mb-4 text-gradient">{project.title}</h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              {project.subtitle}
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {project.tags.map((tag: string, index: number) => (
-                <Badge key={index} variant="outline" className="text-sm">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-
+      <section className="pt-24 pb-12 bg-gradient-to-b from-background to-background/95">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
             <Button 
-              variant="outline" 
+              variant="ghost" 
               onClick={() => navigate('/projects')}
-              className="inline-flex items-center"
+              className="mb-8 text-muted-foreground hover:text-foreground"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Projects
             </Button>
+            
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <Badge className="mb-4">{project.category}</Badge>
+                <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-6">
+                  {project.title}
+                </h1>
+                <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
+                  {project.subtitle}
+                </p>
+                
+                <div className="flex flex-wrap gap-4 mb-6">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {project.date}
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <User className="mr-2 h-4 w-4" />
+                    {project.author}
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag: string) => (
+                    <Badge key={tag} variant="secondary">{tag}</Badge>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <img 
+                  src={project.hero} 
+                  alt={project.title}
+                  className="w-full rounded-lg shadow-2xl"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Project Sections */}
-      <div className="relative">
-        {project.sections.map((section: any, index: number) => renderSection(section, index))}
-      </div>
+      {/* Content Sections */}
+      {project.sections.map((section: any, index: number) => renderSection(section, index))}
 
-      {/* Back to Projects */}
-      <section className="py-16 border-t border-border/50">
-        <div className="container mx-auto px-4 text-center">
-          <Button 
-            onClick={() => navigate('/projects')}
-            className="btn-primary"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Projects
-          </Button>
-        </div>
-      </section>
-
-      {/* Contact Section */}
       <ContactSection />
-      
-      {/* Footer */}
       <Footer />
     </div>
   );
