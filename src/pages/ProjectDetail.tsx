@@ -17,7 +17,7 @@ const projectsData = {
     category: "Systems Engineering",
     date: "Spring 2024",
     author: "Azarias Thomas",
-    tags: ["Automation", "Testing", "Python", "Data Acquisition", "Aerospace", "INFICON"],
+    tags: [],
     hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
       {
