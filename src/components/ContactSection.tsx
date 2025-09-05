@@ -44,8 +44,8 @@ const ContactSection = () => {
     {
       name: "GitHub",
       icon: Github,
-      href: "https://github.com/azarias-sime",
-      label: "github.com/azarias-sime"
+      href: "https://github.com/azitroller",
+      label: "github.com/azitroller"
     }
   ];
 
