@@ -3,6 +3,7 @@
 ## Project info
 
 **URL**: https://lovable.dev/projects/4941c17f-3001-48fc-ae60-6ebf4d6e0934
+**GitHub Pages**: https://azitroller.github.io/azariassime-portfolio/
 
 ## How can I edit this code?
 
