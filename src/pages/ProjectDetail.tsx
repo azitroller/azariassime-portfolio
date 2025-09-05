@@ -29,12 +29,22 @@ const projectsData = {
           { label: "Temperature Range", value: "-40°C to 180°C" },
           { label: "Test Duration", value: "12-48 hours" },
           { label: "Manual Variance", value: "2.3% to 7.8%" }
-        ]
+        ],
+        image: {
+          src: "/lovable-uploads/86b80ba9-25f7-499c-95da-1e4d8d1511b8.png",
+          alt: "Automated Valve Test Platform - Initial test setup with valve components, pressure transducers, and sensor wiring arranged in testing tray for high-pressure aerospace valve testing",
+          position: "right"
+        }
       },
       {
         type: "theoretical",
         title: "Theoretical Background",
         content: "Understanding the complex material science underlying valve failure mechanisms became crucial to developing an effective automated testing solution that could detect the subtle signatures of degradation processes. At elevated temperatures, valve components experience time-dependent plastic deformation following Norton's power law, where the creep rate depends exponentially on temperature and follows a power relationship with stress magnitude.\n\nFor Inconel 718 valve seats operating at 180°C under typical aerospace loading conditions, creep rates of 10⁻⁸ s⁻¹ can accumulate to significant deformation over extended test durations, with the exponential temperature dependence meaning that small temperature variations can dramatically affect creep behavior and thus failure timing.\n\nRepeated thermal cycling induces alternating stress cycles due to differential thermal expansion between dissimilar materials commonly found in valve assemblies. This leads to low-cycle fatigue crack initiation after 10³-10⁴ cycles, following the Coffin-Manson relationship.",
+        image: {
+          src: "/lovable-uploads/025a0eec-1e0e-43d8-ae59-443683cf3c02.png",
+          alt: "Automated Valve Test Platform - Data acquisition software interface showing configuration menu for sensor setup, valve testing parameters, and real-time monitoring controls",
+          position: "left"
+        },
         equations: [
           {
             equation: "\\dot{\\varepsilon} = A\\left(\\frac{\\sigma}{E}\\right)^n \\exp\\left(-\\frac{Q}{RT}\\right)",
@@ -74,6 +84,11 @@ const projectsData = {
         type: "methodology",
         title: "Steps & Methodology",
         content: "My approach to solving this multifaceted challenge began with comprehensive hardware architecture design, carefully selecting components based on performance requirements, environmental compatibility, integration capabilities, and long-term reliability under the extreme conditions encountered in aerospace valve testing.\n\n**Hardware Selection Process:**\n\nThe Omega PX309 pressure transducers were chosen after extensive analysis across temperature ranges and competitive evaluation against alternatives from Honeywell, Kulite, and Kistler, featuring a measurement range of 0-15,000 psi with ±0.25% full scale accuracy, temperature coefficient of ±0.02% FS/°C, and response time under 1 ms for 90% full scale deflection.\n\n**Calibration Protocol:**\n\nThe calibration protocol represented a critical aspect requiring meticulous attention to traceability and uncertainty analysis. I utilized NIST-traceable Fluke 719Pro pressure calibrators with ±0.025% accuracy, deriving calibration equations through weighted least-squares regression that accounted for measurement uncertainties at each calibration point.\n\n**Temperature Measurement:**\n\nType-K thermocouples were selected for their wide operating range, standardized response characteristics defined by NIST standards, and proven reliability in aerospace applications. Cold junction compensation was achieved through integrated circuit temperature sensors (AD590) with ±0.5°C accuracy.",
+        image: {
+          src: "/lovable-uploads/7ca7784b-52b2-43fd-9fe0-970f628faa3a.png",
+          alt: "Automated Valve Test Platform - Advanced test chamber setup with multiple valve assemblies, green PCB control boards, and comprehensive sensor network for environmental testing",
+          position: "right"
+        },
         standards: [
           "ASTM F1387 - Valve Testing Standards",
           "NASA-STD-5009 - Nondestructive Evaluation Requirements",
@@ -104,6 +119,11 @@ const projectsData = {
         type: "implementation",
         title: "Data & Results",
         content: "The data acquisition system selection involved extensive analysis of sampling rate requirements, channel count, resolution needs, and environmental compatibility. The National Instruments USB-6343 DAQ system provided 32 single-ended analog inputs with 16-bit resolution, maximum aggregate sampling rate of 500 kS/s, input voltage range of ±10V with programmable gain amplifiers, and built-in anti-aliasing filters.\n\n**Performance Achievements:**\n\n• Reduced measurement variance from 7.8% to 0.3%\n• Achieved continuous 24/7 operation capability\n• Implemented 1 Hz minimum sampling rate compliance\n• Eliminated operator fatigue-related errors\n• Achieved NIST-traceable calibration accuracy\n\n**System Capabilities:**\n\nThe 16-bit resolution provides theoretical measurement resolution of 1 part in 65,536, corresponding to 0.3 mV resolution over the ±10V input range, which translates to pressure resolution of approximately 0.08 psi when combined with sensor scaling factors. However, effective resolution is typically 2-3 bits less due to noise and environmental factors.",
+        image: {
+          src: "/lovable-uploads/2933f505-0bd4-4e2e-b1ae-b2f3601c9c3c.png",
+          alt: "Automated Valve Test Platform - INFICON Go Skeleton Leak Fixture testing system with digital display showing troubleshoot mode, test loops, and real-time pressure monitoring for aerospace valve testing",
+          position: "left"
+        },
         metrics: [
           { label: "Measurement Accuracy", value: "±0.25% FS" },
           { label: "Temperature Coefficient", value: "±0.02% FS/°C" },
