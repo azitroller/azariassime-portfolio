@@ -171,3 +171,31 @@
     @apply bg-gradient-primary bg-clip-text text-transparent;
   }
 }
+
+/* Math equation styling */
+.equation-block {
+  @apply bg-gradient-to-r from-background via-muted/20 to-background;
+  border-left: 4px solid hsl(var(--primary));
+}
+
+.equation-block .MathJax {
+  font-size: 1.1em !important;
+}
+
+/* Engineering callout styling */
+.engineering-callout {
+  @apply bg-muted/30 border border-muted rounded-lg p-4 my-4;
+  border-left: 4px solid hsl(var(--accent));
+}
+
+.metrics-badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.1));
+  border: 1px solid hsl(var(--border));
+}
+
+/* Pull quote styling */
+.pull-quote {
+  @apply text-xl font-medium italic text-foreground/80 border-l-4 border-primary pl-6 my-6;
+  font-family: Georgia, serif;
+}
