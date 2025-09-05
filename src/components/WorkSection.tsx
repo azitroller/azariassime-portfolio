@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { ExternalLink, ArrowUpRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const WorkSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -126,7 +128,10 @@ const WorkSection = () => {
           <p className="text-muted-foreground mb-6">
             Want to see more of my work?
           </p>
-          <button className="btn-secondary inline-flex items-center gap-2">
+          <button 
+            onClick={() => navigate('/projects')}
+            className="btn-secondary inline-flex items-center gap-2"
+          >
             View All Projects
             <ExternalLink className="w-4 h-4" />
           </button>
