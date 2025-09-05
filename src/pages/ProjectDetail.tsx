@@ -14,9 +14,6 @@ const projectsData = {
     id: "automated-valve-test",
     title: "Automated Valve Test Platform",
     subtitle: "High-Pressure, High-Temperature Testing System for Aerospace Applications",
-    category: "Systems Engineering",
-    date: "Spring 2024",
-    author: "Azarias Thomas",
     tags: [],
     hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
@@ -2144,17 +2141,6 @@ const ProjectDetail = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <Badge variant="secondary" className="text-sm">{project.category}</Badge>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Calendar className="w-4 h-4 mr-2" />
-                {project.date}
-              </div>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <User className="w-4 h-4 mr-2" />
-                {project.author}
-              </div>
-            </div>
             
             <h1 className="text-5xl font-bold mb-4 text-gradient">{project.title}</h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
