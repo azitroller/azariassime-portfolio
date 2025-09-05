@@ -1939,7 +1939,10 @@ const ProjectDetail = () => {
         <Navigation />
         <div className="container mx-auto px-4 pt-24 text-center">
           <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
-          <Button onClick={() => navigate('/projects')}>
+          <Button onClick={() => {
+            navigate('/projects');
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+          }}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Projects
           </Button>
@@ -2158,7 +2161,10 @@ const ProjectDetail = () => {
 
             <Button 
               variant="outline" 
-              onClick={() => navigate('/projects')}
+              onClick={() => {
+                navigate('/projects');
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+              }}
               className="inline-flex items-center"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -2177,7 +2183,10 @@ const ProjectDetail = () => {
       <section className="py-16 border-t border-border/50">
         <div className="container mx-auto px-4 text-center">
           <Button 
-            onClick={() => navigate('/projects')}
+            onClick={() => {
+              navigate('/projects');
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+            }}
             className="btn-primary"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

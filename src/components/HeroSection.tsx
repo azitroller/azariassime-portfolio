@@ -89,8 +89,8 @@ const HeroSection = () => {
         </div>
 
         <h1 className="hero-text text-4xl md:text-6xl lg:text-7xl xl:text-8xl mb-8 animate-fade-in">
-          Engineering tomorrow's{" "}
-          <span className="text-gradient">aerospace innovations!</span>
+          Solving aerospace's next big challenge,{" "}
+          <span className="text-gradient">one project at a time</span>
         </h1>
 
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in">
@@ -108,15 +108,6 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <button
-          onClick={scrollToAbout}
-          className="w-8 h-12 border-2 border-primary rounded-full flex items-end justify-center pb-2 hover:border-primary/80 transition-colors duration-300"
-        >
-          <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
-        </button>
-      </div>
     </section>
   );
 };
