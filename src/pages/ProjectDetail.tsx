@@ -188,222 +188,8 @@ class AdvancedDAQReader:
                  sample_rate=10, buffer_size=10000):
         self.pressure_channels = pressure_channels
         self.temp_channels = temp_channels
-        self.calibration_coeffs = self._load_calibration()
-
-class StatisticalFailureDetector:
-import numpy as np
-import sqlite3
-import pandas as pd
-from scipy import signal, stats
-from datetime import datetime, timedelta
-import threading
-import queue
-import time
-import logging
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import StandardScaler
-
-class AdvancedDAQReader:
-    def __init__(self, pressure_channels, temp_channels, sample_rate=10, buffer_size=10000):
-        self.pressure_channels = pressure_channels
-        self.temp_channels = temp_channels
         self.sample_rate = sample_rate
-        self.buffer_size = buffer_size
-        self.calibration_coeffs = self._load_calibration()
-        self.filter_coeffs = self._design_filters()
-        self.data_buffer = CircularBuffer(buffer_size)
-        self.acquisition_active = False
-
-    def _load_calibration(self):
-        """Load calibration coefficients with temperature compensation"""
-        # Multi-point calibration with cross-correlation terms
-        # P_actual = a0 + a1*V + a2*T + a3*V*T + a4*V^2 + a5*T^2
-        calibration_matrix = {
-            'pressure_ch0': [0.125, 3750.2, -0.045, 0.001247, -0.002134, 0.0000834],
-            'pressure_ch1': [0.118, 3748.7, -0.042, 0.001251, -0.002089, 0.0000829],
-            'temperature': [-273.15, 25.068, 0.0, 0.0, 0.0, 0.0]  # Type-K polynomial coefficients
-        }
-        return calibration_matrix
-
-    def _design_filters(self):
-        """Design digital filters for noise rejection and signal conditioning"""
-        filters = {}
-        
-        # Anti-aliasing filter (4th order Butterworth)
-        nyquist = self.sample_rate / 2
-        cutoff_aa = 0.4 * nyquist  # Conservative anti-aliasing
-        b_aa, a_aa = signal.butter(4, cutoff_aa, fs=self.sample_rate, btype='low')
-        filters['anti_aliasing'] = (b_aa, a_aa)
-        
-        # Power line interference notch filter (60 Hz)
-        notch_freq = 60.0
-        quality_factor = 30.0
-        b_notch, a_notch = signal.iirnotch(notch_freq, quality_factor, fs=self.sample_rate)
-        filters['power_line_notch'] = (b_notch, a_notch)
-        
-        # Low-pass filter for trend analysis (0.1 Hz cutoff)
-        cutoff_lp = 0.1
-        b_lp, a_lp = signal.butter(2, cutoff_lp, fs=self.sample_rate, btype='low')
-        filters['trend_analysis'] = (b_lp, a_lp)
-        
-        return filters
-
-    def acquire_data_burst(self, duration=1.0, apply_filters=True):
-        """Acquire high-speed burst data with comprehensive signal processing"""
-        samples_per_channel = int(self.sample_rate * duration)
-        
-        with nidaqmx.Task() as task:
-            # Configure pressure channels with optimal settings
-            for i, ch in enumerate(self.pressure_channels):
-                task.ai_channels.add_ai_voltage_chan(ch, min_val=-10, max_val=10,
-                                                   name_to_assign_to_channel=f"pressure_{i}")
-                # Set terminal configuration for optimal noise rejection
-                task.ai_channels[f"pressure_{i}"].ai_term_cfg = nidaqmx.constants.TerminalConfiguration.DIFFERENTIAL
-            
-            # Configure temperature channels
-            for i, ch in enumerate(self.temp_channels):
-                task.ai_channels.add_ai_voltage_chan(ch, min_val=-10, max_val=10,
-                                                   name_to_assign_to_channel=f"temperature_{i}")
-                task.ai_channels[f"temperature_{i}"].ai_term_cfg = nidaqmx.constants.TerminalConfiguration.DIFFERENTIAL
-            
-            # Configure timing with hardware triggering for synchronization
-            task.timing.cfg_samp_clk_timing(rate=self.sample_rate,
-                                          source='',  # Use internal clock
-                                          active_edge=nidaqmx.constants.Edge.RISING,
-                                          sample_mode=nidaqmx.constants.AcquisitionType.FINITE,
-                                          samps_per_chan=samples_per_channel)
-            
-            # Configure triggering for synchronized acquisition
-            task.triggers.start_trigger.cfg_dig_edge_start_trig(trigger_source='/Dev1/PFI0',
-                                                              trigger_edge=nidaqmx.constants.Edge.RISING)
-            
-            # Start acquisition and read data
-            start_time = time.perf_counter()
-            raw_data = task.read(number_of_samples_per_channel=samples_per_channel,
-                               timeout=duration + 5.0)  # Allow extra time for safety
-            acquisition_time = time.perf_counter() - start_time
-            
-            return self._process_raw_data(raw_data, acquisition_time, apply_filters)
-
-    def _process_raw_data(self, raw_data, acquisition_time, apply_filters=True):
-        """Apply calibration, filtering, and feature extraction to raw sensor data"""
-        n_pressure = len(self.pressure_channels)
-        pressure_data = raw_data[:n_pressure]
-        temp_data = raw_data[n_pressure:]
-        
-        # Apply calibration with temperature compensation
-        calibrated_pressures = []
-        for i, p_raw in enumerate(pressure_data):
-            coeffs = self.calibration_coeffs[f'pressure_ch{i}']
-            # Use average temperature for pressure compensation
-            T_avg = np.mean(temp_data[0]) if temp_data else 25.0
-            
-            p_calibrated = (coeffs[0] + coeffs[1] * np.array(p_raw) + 
-                          coeffs[2] * T_avg + coeffs[3] * np.array(p_raw) * T_avg + 
-                          coeffs[4] * np.array(p_raw)**2 + coeffs[5] * T_avg**2)
-            calibrated_pressures.append(p_calibrated)
-        
-        # Apply temperature calibration (Type-K thermocouple)
-        calibrated_temperatures = []
-        for i, t_raw in enumerate(temp_data):
-            # Type-K polynomial conversion with cold junction compensation
-            t_calibrated = self._convert_thermocouple_voltage(np.array(t_raw))
-            calibrated_temperatures.append(t_calibrated)
-        
-        # Apply digital filtering if requested
-        if apply_filters:
-            filtered_pressures = []
-            for p_data in calibrated_pressures:
-                # Apply cascade of filters
-                filtered_data = p_data.copy()
-                
-                # Anti-aliasing filter
-                b, a = self.filter_coeffs['anti_aliasing']
-                filtered_data = signal.filtfilt(b, a, filtered_data)
-                
-                # Power line notch filter
-                b, a = self.filter_coeffs['power_line_notch']
-                filtered_data = signal.filtfilt(b, a, filtered_data)
-                
-                filtered_pressures.append(filtered_data)
-        else:
-            filtered_pressures = calibrated_pressures
-        
-        # Calculate acquisition statistics
-        acquisition_stats = {
-            'actual_sample_rate': len(filtered_pressures[0]) / acquisition_time if acquisition_time > 0 else 0,
-            'samples_acquired': len(filtered_pressures[0]),
-            'acquisition_duration': acquisition_time,
-            'timestamp': time.time()
-        }
-        
-        return {
-            'pressures': filtered_pressures,
-            'temperatures': calibrated_temperatures,
-            'raw_data': raw_data,
-            'acquisition_stats': acquisition_stats
-        }
-
-    def _convert_thermocouple_voltage(self, voltage_array):
-        """Convert thermocouple voltage to temperature using NIST polynomials"""
-        # Type-K thermocouple conversion with multiple temperature ranges
-        # Range 1: -200°C to 0°C
-        # Range 2: 0°C to 500°C
-        # Range 3: 500°C to 1372°C
-        
-        temperature = np.zeros_like(voltage_array)
-        
-        # NIST coefficients for Type-K (simplified for demonstration)
-        # Actual implementation would use full NIST polynomial sets
-        c0, c1, c2, c3, c4 = 0.0, 2.508355e1, 7.860106e-2, -2.503131e-1, 8.315270e-2
-        
-        for i, v in enumerate(voltage_array):
-            # Convert mV to temperature using inverse polynomial
-            v_mv = v * 1000  # Convert to mV
-            temp = c0 + c1*v_mv + c2*v_mv**2 + c3*v_mv**3 + c4*v_mv**4
-            temperature[i] = temp
-        
-        return temperature
-
-class CircularBuffer:
-    """High-performance circular buffer for continuous data acquisition"""
-    def __init__(self, capacity):
-        self.capacity = capacity
-        self.buffer = np.zeros(capacity)
-        self.head = 0
-        self.tail = 0
-        self.size = 0
-        self.lock = threading.Lock()
-    
-    def append(self, data):
-        with self.lock:
-            if isinstance(data, (list, np.ndarray)):
-                for item in data:
-                    self._append_single(item)
-            else:
-                self._append_single(data)
-    
-    def _append_single(self, item):
-        self.buffer[self.tail] = item
-        self.tail = (self.tail + 1) % self.capacity
-        if self.size < self.capacity:
-            self.size += 1
-        else:
-            self.head = (self.head + 1) % self.capacity
-    
-    def get_latest(self, n_samples):
-        with self.lock:
-            if n_samples > self.size:
-                n_samples = self.size
-            
-            if self.head <= self.tail:
-                return self.buffer[self.tail-n_samples:self.tail]
-            else:
-                # Handle wrap-around
-                first_part = self.buffer[self.head:self.capacity]
-                second_part = self.buffer[0:self.tail]
-                combined = np.concatenate([first_part, second_part])
-                return combined[-n_samples:]`,
+        self.buffer_size = buffer_size`,
           fullCode: `import nidaqmx
 import numpy as np
 import sqlite3
@@ -429,7 +215,6 @@ class AdvancedDAQReader:
         self.acquisition_active = False
 
     def _load_calibration(self):
-        """Load calibration coefficients with temperature compensation"""
         calibration_matrix = {
             'pressure_ch0': [0.125, 3750.2, -0.045, 0.001247, -0.002134, 0.0000834],
             'pressure_ch1': [0.118, 3748.7, -0.042, 0.001251, -0.002089, 0.0000829],
@@ -438,21 +223,14 @@ class AdvancedDAQReader:
         return calibration_matrix
 
     def acquire_data_burst(self, duration=1.0, apply_filters=True):
-        """Acquire high-speed burst data with comprehensive signal processing"""
         samples_per_channel = int(self.sample_rate * duration)
-        
         with nidaqmx.Task() as task:
             for i, ch in enumerate(self.pressure_channels):
                 task.ai_channels.add_ai_voltage_chan(ch, min_val=-10, max_val=10)
-                task.ai_channels[f"pressure_{i}"].ai_term_cfg = nidaqmx.constants.TerminalConfiguration.DIFFERENTIAL
-            
-            task.timing.cfg_samp_clk_timing(rate=self.sample_rate)
             raw_data = task.read(number_of_samples_per_channel=samples_per_channel)
-            
             return self._process_raw_data(raw_data, duration, apply_filters)
 
 class StatisticalFailureDetector:
-    """Advanced statistical analysis for valve failure detection"""
     def __init__(self, detection_threshold=3.0):
         self.detection_threshold = detection_threshold
         self.failure_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -462,280 +240,67 @@ class StatisticalFailureDetector:
         self.trained = False
 
     def train_failure_classifier(self, training_data, failure_labels):
-        """Train machine learning classifier on historical failure data"""
         features = self._extract_failure_features(training_data)
         features_scaled = self.feature_scaler.fit_transform(features)
         self.failure_classifier.fit(features_scaled, failure_labels)
         self.trained = True
 
-    def _extract_failure_features(self, data_segments):
-        """Extract statistical features indicative of valve degradation"""
-        features = []
-        
-        for segment in data_segments:
-            pressure_data = segment['pressures'][0]
-            temp_data = segment['temperatures'][0] if segment['temperatures'] else []
-            
-            feature_vector = [
-                np.mean(pressure_data), np.std(pressure_data), 
-                np.max(pressure_data) - np.min(pressure_data),
-                stats.skew(pressure_data), stats.kurtosis(pressure_data),
-                np.percentile(pressure_data, 95) - np.percentile(pressure_data, 5),
-                len(self._detect_outliers(pressure_data)) / len(pressure_data),
-                self._calculate_trend_strength(pressure_data),
-                self._calculate_autocorrelation(pressure_data, lag=1)
-            ]
-            
-            if temp_data:
-                feature_vector.extend([
-                    np.mean(temp_data), np.std(temp_data),
-                    np.corrcoef(pressure_data[:len(temp_data)], temp_data)[0,1] if len(temp_data) == len(pressure_data) else 0
-                ])
-            
-            features.append(feature_vector)
-        
-        return np.array(features)
-
     def detect_failure_patterns(self, current_data):
-        """Real-time failure detection using multiple statistical methods"""
         if not self.trained:
             return {'failure_probability': 0.0, 'risk_level': 'unknown', 'anomalies': []}
-        
         features = self._extract_failure_features([current_data])
         features_scaled = self.feature_scaler.transform(features)
         failure_probability = self.failure_classifier.predict_proba(features_scaled)[0, 1]
-        
-        spc_violations = self._check_spc_violations(current_data)
-        anomalies = self._detect_anomalies(current_data)
-        risk_level = self._assess_risk_level(failure_probability, spc_violations, anomalies)
-        
-        return {
-            'failure_probability': failure_probability,
-            'risk_level': risk_level,
-            'spc_violations': spc_violations,
-            'anomalies': anomalies,
-            'recommendations': self._generate_recommendations(risk_level, anomalies)
-        }
-
-    def _detect_outliers(self, data, method='iqr'):
-        """Detect statistical outliers using IQR method"""
-        Q1, Q3 = np.percentile(data, [25, 75])
-        IQR = Q3 - Q1
-        lower_bound = Q1 - 1.5 * IQR
-        upper_bound = Q3 + 1.5 * IQR
-        return np.where((data < lower_bound) | (data > upper_bound))[0]
-
-    def _calculate_trend_strength(self, data):
-        """Calculate trend strength using linear regression"""
-        x = np.arange(len(data))
-        slope, _, r_value, _, _ = stats.linregress(x, data)
-        return abs(r_value * slope)
+        return {'failure_probability': failure_probability, 'risk_level': 'normal'}
 
 class ComprehensiveDataLogger:
-    """High-performance data logging with automatic backup and compression"""
     def __init__(self, database_path, backup_interval=3600):
         self.database_path = database_path
         self.backup_interval = backup_interval
         self.connection_pool = queue.Queue(maxsize=10)
         self.logging_active = False
         self.data_queue = queue.Queue(maxsize=1000)
-        self.compression_level = 6
-        
         self._initialize_database()
         self._start_logging_thread()
 
     def _initialize_database(self):
-        """Initialize SQLite database with optimized schema"""
         conn = sqlite3.connect(self.database_path)
         cursor = conn.cursor()
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS test_data (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp REAL NOT NULL,
-                test_id TEXT NOT NULL,
-                pressure_ch0 REAL,
-                pressure_ch1 REAL,
-                temperature_avg REAL,
-                cycle_count INTEGER,
-                test_phase TEXT,
-                data_quality_score REAL,
-                INDEX(timestamp),
-                INDEX(test_id),
-                INDEX(test_phase)
-            )
-        ''')
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS failure_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp REAL NOT NULL,
-                test_id TEXT NOT NULL,
-                failure_type TEXT,
-                severity_level INTEGER,
-                failure_probability REAL,
-                sensor_data TEXT,
-                mitigation_actions TEXT
-            )
-        ''')
-        
+        cursor.execute('''CREATE TABLE IF NOT EXISTS test_data (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp REAL NOT NULL,
+            test_id TEXT NOT NULL,
+            pressure_ch0 REAL,
+            pressure_ch1 REAL,
+            temperature_avg REAL
+        )''')
         conn.commit()
         conn.close()
 
-    def log_test_data(self, timestamp, test_id, sensor_data, metadata=None):
-        """Queue sensor data for high-performance logging"""
-        log_entry = {
-            'timestamp': timestamp,
-            'test_id': test_id,
-            'sensor_data': sensor_data,
-            'metadata': metadata or {}
-        }
-        
-        try:
-            self.data_queue.put_nowait(log_entry)
-        except queue.Full:
-            logging.warning("Data logging queue full - dropping oldest entries")
-            for _ in range(10):
-                try:
-                    self.data_queue.get_nowait()
-                except queue.Empty:
-                    break
-            self.data_queue.put_nowait(log_entry)
-
-    def _start_logging_thread(self):
-        """Start background thread for database operations"""
-        self.logging_active = True
-        self.logging_thread = threading.Thread(target=self._logging_worker, daemon=True)
-        self.logging_thread.start()
-
-    def _logging_worker(self):
-        """Background worker for database operations"""
-        batch_size = 100
-        batch_data = []
-        last_backup = time.time()
-        
-        while self.logging_active:
-            try:
-                timeout = 1.0 if len(batch_data) == 0 else 0.1
-                log_entry = self.data_queue.get(timeout=timeout)
-                batch_data.append(log_entry)
-                
-                if len(batch_data) >= batch_size or (time.time() - last_backup > self.backup_interval):
-                    self._write_batch_to_database(batch_data)
-                    batch_data.clear()
-                    
-                    if time.time() - last_backup > self.backup_interval:
-                        self._create_backup()
-                        last_backup = time.time()
-                        
-            except queue.Empty:
-                if batch_data:
-                    self._write_batch_to_database(batch_data)
-                    batch_data.clear()
-            except Exception as e:
-                logging.error(f"Database logging error: {e}")
-
 class AdaptiveSafetySystem:
-    """Multi-layered safety system with predictive shutdown capabilities"""
     def __init__(self, pressure_limits, temperature_limits):
-        self.pressure_limits = pressure_limits  # {'min': psi, 'max': psi, 'rate_limit': psi/s}
-        self.temperature_limits = temperature_limits  # {'min': C, 'max': C, 'rate_limit': C/s}
-        self.safety_state = 'normal'  # normal, warning, critical, emergency_stop
+        self.pressure_limits = pressure_limits
+        self.temperature_limits = temperature_limits
+        self.safety_state = 'normal'
         self.shutdown_triggers = []
-        self.safety_margins = {'pressure': 0.95, 'temperature': 0.95}  # 5% safety margin
-        self.predictive_window = 30  # seconds for predictive analysis
-        
         self.emergency_valves = []
         self.safety_interlocks = []
-        self.alarm_outputs = []
 
     def evaluate_safety_conditions(self, current_data, trend_data=None):
-        """Comprehensive safety evaluation with predictive analysis"""
-        safety_status = {
-            'state': 'normal',
-            'violations': [],
-            'warnings': [],
-            'actions_taken': [],
-            'predicted_violations': []
-        }
-        
+        safety_status = {'state': 'normal', 'violations': [], 'warnings': []}
         pressures = current_data.get('pressures', [[]])
         temperatures = current_data.get('temperatures', [[]])
         
-        # Pressure safety checks
         for i, p_data in enumerate(pressures):
             if p_data:
                 current_pressure = np.mean(p_data)
-                max_pressure = current_pressure
-                min_pressure = current_pressure
-                
-                if max_pressure > self.pressure_limits['max']:
-                    safety_status['violations'].append(f"Pressure channel {i} exceeded maximum: {max_pressure:.1f} > {self.pressure_limits['max']}")
+                if current_pressure > self.pressure_limits['max']:
+                    safety_status['violations'].append(f"Pressure exceeded: {current_pressure}")
                     safety_status['state'] = 'critical'
-                
-                if min_pressure < self.pressure_limits['min']:
-                    safety_status['violations'].append(f"Pressure channel {i} below minimum: {min_pressure:.1f} < {self.pressure_limits['min']}")
-                    safety_status['state'] = 'warning' if safety_status['state'] == 'normal' else safety_status['state']
-                
-                if trend_data and len(trend_data) > 1:
-                    pressure_rate = self._calculate_rate_of_change(trend_data, f'pressure_{i}')
-                    if abs(pressure_rate) > self.pressure_limits['rate_limit']:
-                        safety_status['violations'].append(f"Pressure rate limit exceeded: {pressure_rate:.2f} psi/s")
-                        safety_status['state'] = 'critical'
         
-        # Temperature safety checks
-        for i, t_data in enumerate(temperatures):
-            if t_data:
-                current_temp = np.mean(t_data)
-                
-                if current_temp > self.temperature_limits['max']:
-                    safety_status['violations'].append(f"Temperature channel {i} exceeded maximum: {current_temp:.1f}°C")
-                    safety_status['state'] = 'critical'
-                
-                if current_temp < self.temperature_limits['min']:
-                    safety_status['violations'].append(f"Temperature channel {i} below minimum: {current_temp:.1f}°C")
-                    safety_status['state'] = 'warning' if safety_status['state'] == 'normal' else safety_status['state']
-        
-        # Predictive safety analysis
-        if trend_data:
-            predicted_violations = self._predict_safety_violations(trend_data)
-            safety_status['predicted_violations'] = predicted_violations
-            
-            if predicted_violations:
-                safety_status['state'] = 'warning' if safety_status['state'] == 'normal' else safety_status['state']
-        
-        # Execute safety actions based on state
-        if safety_status['state'] in ['critical', 'emergency_stop']:
-            actions = self._execute_emergency_procedures(safety_status['violations'])
-            safety_status['actions_taken'] = actions
-        
-        self.safety_state = safety_status['state']
         return safety_status
 
-    def _execute_emergency_procedures(self, violations):
-        """Execute emergency shutdown procedures"""
-        actions = []
-        emergency_timestamp = time.time()
-        logging.critical(f"EMERGENCY SHUTDOWN TRIGGERED: {violations}")
-        
-        for valve in self.emergency_valves:
-            try:
-                valve.close()
-                actions.append(f"Emergency valve {valve.id} closed")
-            except Exception as e:
-                logging.error(f"Failed to close emergency valve {valve.id}: {e}")
-        
-        for interlock in self.safety_interlocks:
-            try:
-                interlock.activate()
-                actions.append(f"Safety interlock {interlock.id} activated")
-            except Exception as e:
-                logging.error(f"Failed to activate safety interlock {interlock.id}: {e}")
-        
-        return actions
-
 class CircularBuffer:
-    """High-performance circular buffer for continuous data acquisition"""
     def __init__(self, capacity):
         self.capacity = capacity
         self.buffer = np.zeros(capacity)
@@ -749,8 +314,6 @@ class CircularBuffer:
             if isinstance(data, (list, np.ndarray)):
                 for item in data:
                     self._append_single(item)
-            else:
-                self._append_single(data)
 
     def _append_single(self, item):
         self.buffer[self.tail] = item
@@ -761,183 +324,6 @@ class CircularBuffer:
             self.head = (self.head + 1) % self.capacity`,
           language: "python"
         }
-      },
-      {
-        type: "results",
-        title: "Impact & Takeaways",
-        content: "The implementation of the automated valve test platform resulted in significant improvements across multiple performance metrics and operational capabilities that exceeded initial project goals and established new standards for valve testing at INFICON.\n\n**Quantitative Improvements:**\n\n• **Measurement Precision:** Reduced measurement variance from 7.8% (manual) to 0.3% (automated)\n• **Operational Efficiency:** Eliminated 12-48 hour manual supervision requirements\n• **Data Quality:** Achieved continuous 1 Hz sampling rate compliance with aerospace standards\n• **Safety Enhancement:** Removed personnel exposure to high-pressure, high-temperature hazards\n• **Cost Reduction:** Estimated 40% reduction in testing costs through automation\n\n**Standards Compliance Achievements:**\n\nThe system now fully complies with ASTM F1387, NASA-STD-5009, and MIL-PRF-87257 requirements, including continuous data recording, NIST traceability, and statistical validation of failure detection methods.\n\n**Long-term Impact:**\n\nThis project established a new paradigm for valve testing at INFICON, with the automated platform becoming the standard for all aerospace component validation. The success led to additional automation projects and influenced the company's strategic direction toward Industry 4.0 implementations.",
-        pullQuote: "The automated platform detected incipient valve failures 18 hours before they would have been identified through manual testing, potentially preventing catastrophic system failures worth millions of dollars.",
-        metrics: [
-          { label: "Testing Cost Reduction", value: "40%" },
-          { label: "Measurement Precision", value: "26× improvement" },
-          { label: "Failure Detection", value: "18 hours earlier" },
-          { label: "Standards Compliance", value: "100%" },
-          { label: "Data Gaps Eliminated", value: "Complete" },
-          { label: "Personnel Risk", value: "Eliminated" }
-        ],
-        visual: {
-          type: "image",
-          content: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png"
-        }
-      }
-    ]
-  },
-  "rga-sensor-integration": {
-    id: "rga-sensor-integration",
-    title: "RGA Sensor Integration with Unitree Go2 Robot",
-    subtitle: "Advanced vibration isolation system for precision analytical instrumentation on mobile robotics platforms",
-    category: "Mechanical Design",
-    date: "2024",
-    author: "Azarias Thomas",
-    tags: ["CAD Design", "Vibration Isolation", "Robotics Integration", "INFICON", "Mass Spectrometry"],
-    hero: "/lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png",
-    sections: [
-      {
-        type: "overview",
-        title: "Context & Goal",
-        content: "The integration of sensitive analytical instrumentation with mobile robotic platforms represents one of the most challenging interdisciplinary engineering problems in modern autonomous systems, requiring seamless fusion of mechanical design, vibration control, signal processing, and control systems engineering. During my internship at INFICON, I encountered a particularly demanding variant of this challenge: mounting a Residual Gas Analyzer (RGA) sensor system onto a Unitree Go2 quadruped robot while maintaining the analytical precision required for trace gas detection in dynamic field environments.\n\nRGA systems are extraordinarily sensitive vacuum-based mass spectrometers designed to detect and quantify trace gas species at partial pressures as low as 10⁻¹⁴ Torr, requiring mechanical stability, vibration isolation, and alignment precision that seem fundamentally incompatible with the dynamic loading environment of a legged locomotion system.\n\nThe Unitree Go2 represents a sophisticated legged robot capable of dynamic gaits including walking, trotting, and running at speeds up to 3.5 m/s, generating peak accelerations up to 1.5g during normal operation and impact forces exceeding 3× body weight during landing events.",
-        metrics: [
-          { label: "Robot Speed", value: "Up to 3.5 m/s" },
-          { label: "Peak Acceleration", value: "1.5g" },
-          { label: "RGA Sensitivity", value: "10⁻¹⁴ Torr" },
-          { label: "Mass Range", value: "1-300 amu" },
-          { label: "Beam Deflection Limit", value: "±0.5 mm" }
-        ],
-        image: {
-          src: "/lovable-uploads/a3edee5c-541d-45dd-8405-95b6cf1e93ca.png",
-          alt: "INFICON Residual Gas Analyzer (RGA) sensor mounted on precision stand fixture, displaying the ultra-high vacuum mass spectrometer with its characteristic cylindrical ionization chamber, quadrupole analyzer assembly, and precision electron gun system. The robust mechanical design showcases the ultra-sensitive analytical instrumentation requiring vibration isolation for integration onto mobile robotic platforms.",
-          position: "right"
-        }
-      },
-      {
-        type: "theoretical",
-        title: "Theoretical Background",
-        content: "RGA sensors operate on the principle of electron impact ionization mass spectrometry, where gas molecules are ionized by a controlled electron beam, accelerated through an electric field, and separated by mass-to-charge ratio using either quadrupole or magnetic sector analyzers. The measurement process requires maintaining ultra-high vacuum conditions (typically 10⁻⁸ to 10⁻¹² Torr) within the analyzer chamber, precise alignment of ion optics to maintain measurement accuracy, stable high-voltage power supplies for ion acceleration and detection, and vibration-free mounting to prevent mechanical modulation of the electron beam path.\n\n**Ion Beam Deflection Physics:**\n\nThe fundamental physics governing RGA operation created specific mechanical requirements that directly conflicted with the dynamic environment of legged locomotion. Ion beam deflection due to mechanical vibration follows a predictable relationship where even small accelerations can cause significant beam displacement.\n\n**Robot Dynamics and Vibration Sources:**\n\nQuadruped locomotion generates complex force patterns that depend on gait selection, terrain characteristics, payload distribution, and locomotion speed, with fundamental frequencies determined by stride frequency (typically 1-3 Hz) and higher harmonics extending well into the structural resonance range of precision instrumentation.",
-        image: {
-          src: "/lovable-uploads/9e20303a-ba9b-4eda-83bc-7818701c529c.png",
-          alt: "3D rendering of Unitree Go2 quadruped robot showcasing its advanced mechanical design with brushless servo actuators, carbon fiber frame construction, and integrated IMU sensor package. The sophisticated legged locomotion platform features 12 degrees of freedom, enabling dynamic gaits while generating complex vibration patterns that challenge the integration of precision analytical instrumentation.",
-          position: "left"
-        },
-        equations: [
-          {
-            equation: "\\delta = \\frac{a \\times L^2}{8 \\times V}",
-            variables: [
-              { symbol: "δ", description: "ion beam displacement (m)" },
-              { symbol: "a", description: "acceleration magnitude (m/s²)" },
-              { symbol: "L", description: "beam path length (175 mm typical)" },
-              { symbol: "V", description: "accelerating voltage (85 V typical)" }
-            ]
-          },
-          {
-            equation: "\\omega_n = \\sqrt{\\frac{k}{m}}",
-            variables: [
-              { symbol: "ωn", description: "natural frequency (rad/s)" },
-              { symbol: "k", description: "system stiffness (N/m)" },
-              { symbol: "m", description: "system mass (kg)" }
-            ]
-          },
-          {
-            equation: "T(\\omega) = \\sqrt{\\frac{1 + (2\\zeta\\omega/\\omega_n)^2}{(1-(\\omega/\\omega_n)^2)^2 + (2\\zeta\\omega/\\omega_n)^2}}",
-            variables: [
-              { symbol: "T(ω)", description: "transmissibility function" },
-              { symbol: "ω", description: "excitation frequency (rad/s)" },
-              { symbol: "ζ", description: "damping ratio" },
-              { symbol: "ωn", description: "natural frequency (rad/s)" }
-            ]
-          }
-        ]
-      },
-      {
-        type: "methodology",
-        title: "Steps & Methodology",
-        content: "My approach to solving this multifaceted engineering challenge began with comprehensive requirements analysis that established quantitative specifications for mechanical performance, vibration isolation, alignment stability, and system integration.\n\n**Design Requirements:**\n\n• Support of the 1.8 kg RGA sensor mass with safety factor of 4 under maximum acceleration conditions\n• Maintenance of sensor alignment within ±0.2° during all locomotion modes\n• Provision of adequate clearance for obstacle navigation with minimum ground clearance of 150 mm\n• Integration with existing robot mounting interfaces without modification to the base platform\n\n**Vibration Isolation Strategy:**\n\nThe mounting system design utilized a hierarchical isolation approach with primary isolation between the robot frame and mounting bracket, secondary isolation between the bracket and sensor housing, and tertiary isolation for critical internal components within the RGA system.\n\n**Mount Selection and Design:**\n\nThe primary isolation system employed four cylindrical elastomeric mounts (McMaster-Carr 60A durometer silicone) arranged in a symmetric pattern to provide uniform load distribution while minimizing coupling between translational and rotational vibration modes.",
-        image: {
-          src: "/lovable-uploads/4baf8bed-13ba-4037-918d-01f192b28ffd.png",
-          alt: "Field deployment of the fully integrated RGA-equipped Unitree Go2 robotic system in rugged volcanic terrain, with project manager Dr. Andres Diaz demonstrating the successful real-world application. The image captures the sophisticated quadruped robot carrying the precision analytical payload in challenging environmental conditions, showcasing the robust mechanical integration and vibration isolation system performance.",
-          position: "right"
-        },
-        standards: [
-          "ISO 5349 - Mechanical Vibration Standards",
-          "ASTM D5992 - Elastomer Testing Methods",
-          "NASA-STD-5001 - Structural Design Requirements",
-          "IEC 60068 - Environmental Testing Standards"
-        ],
-        equations: [
-          {
-            equation: "k = \\frac{E \\times A}{L}",
-            variables: [
-              { symbol: "k", description: "mount stiffness (N/m)" },
-              { symbol: "E", description: "elastic modulus (Pa)" },
-              { symbol: "A", description: "cross-sectional area (m²)" },
-              { symbol: "L", description: "mount length (m)" }
-            ]
-          },
-          {
-            equation: "\\delta_{static} = \\frac{mg}{k_{total}}",
-            variables: [
-              { symbol: "δstatic", description: "static deflection (m)" },
-              { symbol: "m", description: "RGA mass (1.8 kg)" },
-              { symbol: "g", description: "gravitational acceleration (9.81 m/s²)" },
-              { symbol: "ktotal", description: "total system stiffness (N/m)" }
-            ]
-          }
-        ]
-      },
-      {
-        type: "implementation",
-        title: "Data & Results",
-        content: "For the 1.8 kg RGA payload, elastomeric mounts with combined stiffness of 8,500 N/m provided a natural frequency of 11 Hz, placing the system well into the isolation range for robot locomotion frequencies above 20 Hz while maintaining sufficient stiffness to prevent excessive static deflection under gravitational loading.\n\n**Performance Achievements:**\n\n• Achieved 20+ dB vibration attenuation above 15 Hz\n• Maintained beam alignment within ±0.1° during dynamic operation\n• Reduced beam deflection from 3.2 mm to 0.3 mm at 0.1g acceleration\n• Successfully isolated RGA resonance at 420 Hz from robot structural modes\n• Achieved measurement stability within ±2% during robot locomotion\n\n**Vibration Isolation Performance:**\n\nThe system demonstrated excellent isolation characteristics with the natural frequency at 11 Hz providing effective isolation for all locomotion-induced vibrations above 20 Hz. Modal analysis revealed proper separation between robot structural modes and the mounted RGA system.",
-        image: {
-          src: "/lovable-uploads/d9c7cb87-c406-4026-9883-723462cec732.png",
-          alt: "Alternative perspective of the integrated robotic analytical system showcasing the custom-engineered mounting platform and vibration isolation system. The image details the sophisticated mechanical interface between the precision RGA mass spectrometer and the Unitree Go2 chassis, highlighting the multi-layer elastomeric isolation mounts, structural reinforcement brackets, and optimized weight distribution for maintaining analytical precision during dynamic locomotion.",
-          position: "left"
-        },
-        metrics: [
-          { label: "Vibration Attenuation", value: ">20 dB @ 15Hz+" },
-          { label: "Beam Alignment", value: "±0.1° maintained" },
-          { label: "Beam Deflection", value: "3.2mm → 0.3mm" },
-          { label: "Natural Frequency", value: "11 Hz" },
-          { label: "Measurement Stability", value: "±2%" },
-          { label: "Safety Factor", value: "4.0" }
-        ],
-        visual: {
-          type: "chart",
-          content: {
-            type: "line",
-            data: {
-              labels: ["5 Hz", "10 Hz", "20 Hz", "50 Hz", "100 Hz", "200 Hz"],
-              datasets: [{
-                label: "Vibration Transmission (dB)",
-                data: [5, 15, -5, -20, -30, -35],
-                borderColor: "hsl(var(--primary))",
-                backgroundColor: "hsl(var(--primary) / 0.1)"
-              }]
-            }
-          }
-        }
-      },
-      {
-        type: "code",
-        title: "Mathematical Models & Design Tools",
-        content: "The design process required sophisticated modeling tools to predict vibration transmission characteristics, optimize mount parameters, and evaluate system performance under various operating conditions. I developed a comprehensive Python framework that integrates vibration analysis, beam deflection calculations, and performance optimization.",
-        equations: [
-          {
-            equation: "Q = \\frac{1}{2\\zeta}",
-            variables: [
-              { symbol: "Q", description: "quality factor (dimensionless)" },
-              { symbol: "ζ", description: "damping ratio (0.15 optimal)" }
-            ]
-          },
-          {
-            equation: "A_{transmitted} = A_{input} \\times T(\\omega)",
-            variables: [
-              { symbol: "Atransmitted", description: "transmitted vibration amplitude" },
-              { symbol: "Ainput", description: "input vibration amplitude" },
-              { symbol: "T(ω)", description: "transmissibility function" }
-            ]
-          }
-        ],
-        codePreview: {
           title: "RGA Mounting System Design Class",
           preview: `import numpy as np
 from scipy import signal, optimize
