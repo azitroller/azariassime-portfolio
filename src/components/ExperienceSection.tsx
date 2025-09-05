@@ -148,10 +148,14 @@ const ExperienceSection = () => {
             <p className="text-white/90 mb-6">
               Download my complete resume for detailed information about my technical skills and certifications.
             </p>
-            <button className="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-white/90 transition-all duration-300 inline-flex items-center gap-2">
+            <a 
+              href="/resume/Azarias-Simes-Resume.pdf" 
+              download="Azarias-Simes-Resume.pdf"
+              className="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-white/90 transition-all duration-300 inline-flex items-center gap-2"
+            >
               Download Resume
               <ExternalLink className="w-4 h-4" />
-            </button>
+            </a>
           </div>
         </div>
       </div>
