@@ -29,8 +29,19 @@ const Navigation = () => {
     }
   };
 
+  const handleHomeClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   const handleProjectsClick = () => {
     navigate('/projects');
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
     setIsMobileMenuOpen(false);
   };
 
@@ -47,7 +58,7 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <button
-              onClick={() => scrollToSection('hero')}
+              onClick={handleHomeClick}
               className="text-2xl font-bold text-foreground hover:text-primary transition-colors duration-300"
             >
               Azarias.

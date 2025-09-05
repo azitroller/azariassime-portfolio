@@ -129,7 +129,10 @@ const WorkSection = () => {
             Want to see more of my work?
           </p>
           <button 
-            onClick={() => navigate('/projects')}
+            onClick={() => {
+              navigate('/projects');
+              setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+            }}
             className="btn-secondary inline-flex items-center gap-2"
           >
             View All Projects

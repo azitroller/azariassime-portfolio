@@ -1,5 +1,18 @@
+import { useNavigate, useLocation } from "react-router-dom";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleHomeClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <footer className="py-12 section-padding border-t border-border">
@@ -7,9 +20,12 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo and Copyright */}
           <div className="flex items-center gap-8">
-            <div className="text-2xl font-bold text-foreground">
+            <button 
+              onClick={handleHomeClick}
+              className="text-2xl font-bold text-foreground hover:text-primary transition-colors duration-300"
+            >
               Azarias.
-            </div>
+            </button>
             <p className="text-sm text-muted-foreground">
               © {currentYear} Azarias Sime. All rights reserved.
             </p>
