@@ -1836,23 +1836,33 @@ class PropulsionSystemOptimizer:
     tags: ["Stability Analysis", "Flight Dynamics", "Design Optimization", "CFD", "Wind Tunnel Testing"],
     hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
-      {
-        type: "overview",
-        title: "Project Overview",
-        content: "This comprehensive study analyzes the effects of tail and fuselage design variations on UAV stability characteristics through advanced computational methods. The research focuses on optimizing aerodynamic performance while maintaining flight stability across various operational conditions.\n\nUAV design requires careful consideration of stability and control characteristics, particularly in the aft-body configuration. This study examines how variations in tail geometry and fuselage integration affect longitudinal and lateral-directional stability derivatives, providing insights for optimal UAV design.",
-        metrics: [
-          { label: "Configurations Tested", value: "15 variants" },
-          { label: "CFD Simulations", value: "50+ runs" },
-          { label: "Wind Tunnel Tests", value: "25 hours" },
-          { label: "Stability Improvement", value: "25%" },
-          { label: "Drag Reduction", value: "15%" }
-        ]
-      },
-      {
-        type: "theoretical",
-        title: "Technical Methodology",
-        content: "**Geometric Parametrization:**\n\nThe study employed systematic variations in tail configuration including horizontal tail positioning (conventional vs. T-tail configurations), vertical tail sizing (area and aspect ratio variations), fuselage-tail integration (different junction geometries and fairing shapes), and dihedral angles (impact on lateral stability characteristics).\n\n**Computational Analysis Framework:**\n\nAdvanced CFD simulations were conducted using high-fidelity Reynolds-Averaged Navier-Stokes (RANS) methods with SST k-ω turbulence modeling. The analysis included static stability derivative calculations, dynamic response analysis, control effectiveness evaluation, and trim condition assessments.",
-        equations: [
+       {
+         type: "overview",
+         title: "Project Overview",
+         content: "This comprehensive study analyzes the effects of tail and fuselage design variations on UAV stability characteristics through advanced computational methods. The research focuses on optimizing aerodynamic performance while maintaining flight stability across various operational conditions.\n\nUAV design requires careful consideration of stability and control characteristics, particularly in the aft-body configuration. This study examines how variations in tail geometry and fuselage integration affect longitudinal and lateral-directional stability derivatives, providing insights for optimal UAV design.",
+         metrics: [
+           { label: "Configurations Tested", value: "15 variants" },
+           { label: "CFD Simulations", value: "50+ runs" },
+           { label: "Wind Tunnel Tests", value: "25 hours" },
+           { label: "Stability Improvement", value: "25%" },
+           { label: "Drag Reduction", value: "15%" }
+         ],
+         image: {
+           src: "/lovable-uploads/d85accaa-2d58-4dc6-a314-7ad65ddb945b.png",
+           alt: "CFD mesh analysis of UAV aircraft showing computational grid structure and aerodynamic parameters including efficiency, lift coefficient, and moment coefficient data for stability analysis",
+           position: "right"
+         }
+       },
+       {
+         type: "theoretical",
+         title: "Technical Methodology",
+         content: "**Geometric Parametrization:**\n\nThe study employed systematic variations in tail configuration including horizontal tail positioning (conventional vs. T-tail configurations), vertical tail sizing (area and aspect ratio variations), fuselage-tail integration (different junction geometries and fairing shapes), and dihedral angles (impact on lateral stability characteristics).\n\n**Computational Analysis Framework:**\n\nAdvanced CFD simulations were conducted using high-fidelity Reynolds-Averaged Navier-Stokes (RANS) methods with SST k-ω turbulence modeling. The analysis included static stability derivative calculations, dynamic response analysis, control effectiveness evaluation, and trim condition assessments.",
+         image: {
+           src: "/lovable-uploads/e20bcea9-8d8d-450a-b1e0-35edf8e18228.png",
+           alt: "Pressure contour and velocity streamline analysis comparing UAV aerodynamics at different angles of attack, showing top and bottom views with color-coded pressure distribution and flow visualization",
+           position: "left"
+         },
+         equations: [
           {
             equation: "C_{m_\\alpha} = \\frac{\\partial C_m}{\\partial \\alpha}",
             variables: [
@@ -1895,22 +1905,27 @@ class PropulsionSystemOptimizer:
           { label: "Flutter Margin", value: "40% above Vd" }
         ]
       },
-      {
-        type: "results",
-        title: "Design Optimization Framework",
-        content: "A multi-objective optimization approach was implemented to balance competing design requirements. The optimization included minimizing drag while maximizing stability margins and ensuring control authority, subject to structural limits, manufacturing feasibility, and operational requirements.\n\n**Validation and Testing:**\n\nCFD results were validated against experimental data from wind tunnel testing including force and moment measurements across angle of attack range, surface pressure distributions on tail surfaces, and flow visualization studies of tail-fuselage interaction. Selected configurations were validated through flight testing programs with stability and control derivative identification, handling qualities assessment, and performance verification across flight conditions.",
-        metrics: [
-          { label: "Wind Tunnel Correlation", value: "±3% accuracy" },
-          { label: "Flight Test Validation", value: "95% agreement" },
-          { label: "Optimization Convergence", value: "25 iterations" },
-          { label: "Design Space Explored", value: "500+ points" },
-          { label: "Pareto Solutions", value: "15 optimal" }
-        ],
-        visual: {
-          type: "image",
-          content: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
-        }
-      }
+       {
+         type: "results",
+         title: "Design Optimization Framework",
+         content: "A multi-objective optimization approach was implemented to balance competing design requirements. The optimization included minimizing drag while maximizing stability margins and ensuring control authority, subject to structural limits, manufacturing feasibility, and operational requirements.\n\n**Validation and Testing:**\n\nCFD results were validated against experimental data from wind tunnel testing including force and moment measurements across angle of attack range, surface pressure distributions on tail surfaces, and flow visualization studies of tail-fuselage interaction. Selected configurations were validated through flight testing programs with stability and control derivative identification, handling qualities assessment, and performance verification across flight conditions.",
+         metrics: [
+           { label: "Wind Tunnel Correlation", value: "±3% accuracy" },
+           { label: "Flight Test Validation", value: "95% agreement" },
+           { label: "Optimization Convergence", value: "25 iterations" },
+           { label: "Design Space Explored", value: "500+ points" },
+           { label: "Pareto Solutions", value: "15 optimal" }
+         ],
+         image: {
+           src: "/lovable-uploads/6f53696a-ff0b-472d-b75b-0cb0b4fabdae.png",
+           alt: "Professional wind tunnel testing facility with large circular test section and measurement arrays for aerodynamic validation and experimental verification of UAV designs",
+           position: "right"
+         },
+         visual: {
+           type: "image",
+           content: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
+         }
+       }
     ]
   }
 };
