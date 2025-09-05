@@ -1979,10 +1979,15 @@ const ProjectDetail = () => {
               {section.image && (
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <img 
-                    src={section.image} 
-                    alt={section.title}
+                    src={typeof section.image === 'string' ? section.image : section.image.src} 
+                    alt={typeof section.image === 'string' ? section.title : section.image.alt}
                     className="w-full h-auto"
                   />
+                  {typeof section.image === 'object' && section.image.alt && (
+                    <div className="bg-muted/50 px-4 py-2 text-sm text-muted-foreground">
+                      {section.image.alt}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
