@@ -74,7 +74,7 @@ const Navigation = () => {
               About
             </button>
             <button
-              onClick={() => scrollToSection('experience')}
+              onClick={() => scrollToSection('resume-download')}
               className="text-foreground hover:text-primary transition-colors duration-300"
             >
               Resume
@@ -115,7 +115,7 @@ const Navigation = () => {
                 About
               </button>
               <button
-                onClick={() => scrollToSection('experience')}
+                onClick={() => scrollToSection('resume-download')}
                 className="block w-full text-left text-foreground hover:text-primary transition-colors duration-300"
               >
                 Resume

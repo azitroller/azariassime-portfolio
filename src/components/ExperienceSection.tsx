@@ -140,7 +140,7 @@ const ExperienceSection = () => {
         </div>
 
         {/* Resume Download CTA */}
-        <div className={`text-center mt-16 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+        <div id="resume-download" className={`text-center mt-16 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
           <div className="bg-gradient-primary p-8 rounded-2xl text-center">
             <h4 className="text-2xl font-bold text-white mb-4">
               Ready to collaborate on engineering projects?
