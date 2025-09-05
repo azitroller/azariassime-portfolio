@@ -446,12 +446,22 @@ class CircularBuffer:
           { label: "RGA Sensitivity", value: "10⁻¹⁴ Torr" },
           { label: "Mass Range", value: "1-300 amu" },
           { label: "Beam Deflection Limit", value: "±0.5 mm" }
-        ]
+        ],
+        image: {
+          src: "/lovable-uploads/a3edee5c-541d-45dd-8405-95b6cf1e93ca.png",
+          alt: "INFICON Residual Gas Analyzer (RGA) sensor mounted on precision stand fixture, displaying the ultra-high vacuum mass spectrometer with its characteristic cylindrical ionization chamber, quadrupole analyzer assembly, and precision electron gun system. The robust mechanical design showcases the ultra-sensitive analytical instrumentation requiring vibration isolation for integration onto mobile robotic platforms.",
+          position: "right"
+        }
       },
       {
         type: "theoretical",
         title: "Theoretical Background",
         content: "RGA sensors operate on the principle of electron impact ionization mass spectrometry, where gas molecules are ionized by a controlled electron beam, accelerated through an electric field, and separated by mass-to-charge ratio using either quadrupole or magnetic sector analyzers. The measurement process requires maintaining ultra-high vacuum conditions (typically 10⁻⁸ to 10⁻¹² Torr) within the analyzer chamber, precise alignment of ion optics to maintain measurement accuracy, stable high-voltage power supplies for ion acceleration and detection, and vibration-free mounting to prevent mechanical modulation of the electron beam path.\n\n**Ion Beam Deflection Physics:**\n\nThe fundamental physics governing RGA operation created specific mechanical requirements that directly conflicted with the dynamic environment of legged locomotion. Ion beam deflection due to mechanical vibration follows a predictable relationship where even small accelerations can cause significant beam displacement.\n\n**Robot Dynamics and Vibration Sources:**\n\nQuadruped locomotion generates complex force patterns that depend on gait selection, terrain characteristics, payload distribution, and locomotion speed, with fundamental frequencies determined by stride frequency (typically 1-3 Hz) and higher harmonics extending well into the structural resonance range of precision instrumentation.",
+        image: {
+          src: "/lovable-uploads/9e20303a-ba9b-4eda-83bc-7818701c529c.png",
+          alt: "3D rendering of Unitree Go2 quadruped robot showcasing its advanced mechanical design with brushless servo actuators, carbon fiber frame construction, and integrated IMU sensor package. The sophisticated legged locomotion platform features 12 degrees of freedom, enabling dynamic gaits while generating complex vibration patterns that challenge the integration of precision analytical instrumentation.",
+          position: "left"
+        },
         equations: [
           {
             equation: "\\delta = \\frac{a \\times L^2}{8 \\times V}",
@@ -485,6 +495,11 @@ class CircularBuffer:
         type: "methodology",
         title: "Steps & Methodology",
         content: "My approach to solving this multifaceted engineering challenge began with comprehensive requirements analysis that established quantitative specifications for mechanical performance, vibration isolation, alignment stability, and system integration.\n\n**Design Requirements:**\n\n• Support of the 1.8 kg RGA sensor mass with safety factor of 4 under maximum acceleration conditions\n• Maintenance of sensor alignment within ±0.2° during all locomotion modes\n• Provision of adequate clearance for obstacle navigation with minimum ground clearance of 150 mm\n• Integration with existing robot mounting interfaces without modification to the base platform\n\n**Vibration Isolation Strategy:**\n\nThe mounting system design utilized a hierarchical isolation approach with primary isolation between the robot frame and mounting bracket, secondary isolation between the bracket and sensor housing, and tertiary isolation for critical internal components within the RGA system.\n\n**Mount Selection and Design:**\n\nThe primary isolation system employed four cylindrical elastomeric mounts (McMaster-Carr 60A durometer silicone) arranged in a symmetric pattern to provide uniform load distribution while minimizing coupling between translational and rotational vibration modes.",
+        image: {
+          src: "/lovable-uploads/4baf8bed-13ba-4037-918d-01f192b28ffd.png",
+          alt: "Field deployment of the fully integrated RGA-equipped Unitree Go2 robotic system in rugged volcanic terrain, with project manager Dr. Andres Diaz demonstrating the successful real-world application. The image captures the sophisticated quadruped robot carrying the precision analytical payload in challenging environmental conditions, showcasing the robust mechanical integration and vibration isolation system performance.",
+          position: "right"
+        },
         standards: [
           "ISO 5349 - Mechanical Vibration Standards",
           "ASTM D5992 - Elastomer Testing Methods",
@@ -516,6 +531,11 @@ class CircularBuffer:
         type: "implementation",
         title: "Data & Results",
         content: "For the 1.8 kg RGA payload, elastomeric mounts with combined stiffness of 8,500 N/m provided a natural frequency of 11 Hz, placing the system well into the isolation range for robot locomotion frequencies above 20 Hz while maintaining sufficient stiffness to prevent excessive static deflection under gravitational loading.\n\n**Performance Achievements:**\n\n• Achieved 20+ dB vibration attenuation above 15 Hz\n• Maintained beam alignment within ±0.1° during dynamic operation\n• Reduced beam deflection from 3.2 mm to 0.3 mm at 0.1g acceleration\n• Successfully isolated RGA resonance at 420 Hz from robot structural modes\n• Achieved measurement stability within ±2% during robot locomotion\n\n**Vibration Isolation Performance:**\n\nThe system demonstrated excellent isolation characteristics with the natural frequency at 11 Hz providing effective isolation for all locomotion-induced vibrations above 20 Hz. Modal analysis revealed proper separation between robot structural modes and the mounted RGA system.",
+        image: {
+          src: "/lovable-uploads/d9c7cb87-c406-4026-9883-723462cec732.png",
+          alt: "Alternative perspective of the integrated robotic analytical system showcasing the custom-engineered mounting platform and vibration isolation system. The image details the sophisticated mechanical interface between the precision RGA mass spectrometer and the Unitree Go2 chassis, highlighting the multi-layer elastomeric isolation mounts, structural reinforcement brackets, and optimized weight distribution for maintaining analytical precision during dynamic locomotion.",
+          position: "left"
+        },
         metrics: [
           { label: "Vibration Attenuation", value: ">20 dB @ 15Hz+" },
           { label: "Beam Alignment", value: "±0.1° maintained" },
