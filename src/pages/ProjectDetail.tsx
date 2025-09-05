@@ -982,7 +982,12 @@ class RGAMountingSystemDesign:
           { label: "NOx Emissions", value: "-15%" },
           { label: "Noise Level", value: "<65 dB @ 100m" },
           { label: "Metal Temperature", value: "<1450 K" }
-        ]
+        ],
+        image: {
+          src: "/lovable-uploads/0def1be4-0ecb-4513-9ec2-6929d62df0e1.png",
+          alt: "UAV Propulsion Optimization - Advanced military aircraft featuring stealth technology and turbofan propulsion system during flight operations, demonstrating the sophisticated aerodynamic design principles and propulsion integration techniques applied in modern aerospace engineering for unmanned aerial vehicle applications",
+          position: "right"
+        }
       },
       {
         type: "theoretical",
@@ -1029,6 +1034,11 @@ class RGAMountingSystemDesign:
           "ISO 3745 - Acoustics Measurement Standards",
           "AIAA S-119 - Turbomachinery Design Guidelines"
         ],
+        image: {
+          src: "/lovable-uploads/f422b176-c050-4419-9acc-8c65c34f1679.png",
+          alt: "UAV Propulsion Optimization - Advanced CFD simulation of turbine impeller showing intricate flow analysis with pressure and velocity contours across the curved blade surfaces, illustrating the complex three-dimensional flow patterns and thermal gradients critical for optimizing turbomachinery performance, efficiency, and durability in small-scale jet engine applications for unmanned aerial vehicles",
+          position: "right"
+        },
         equations: [
           {
             equation: "\\pi_c = \\left(\\frac{T_{2s}}{T_1}\\right)^{\\frac{\\gamma}{\\gamma-1}}",
