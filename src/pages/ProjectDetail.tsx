@@ -993,6 +993,11 @@ class RGAMountingSystemDesign:
         type: "theoretical",
         title: "Theoretical Background",
         content: "The compressible flow physics in the intake and compressor sections exhibit strong sensitivity to Mach number effects, boundary layer development, and flow separation phenomena that directly influence pressure recovery, distortion patterns, and surge margin. The combustion processes in the primary zone involve turbulent mixing, chemical kinetics, heat release, and pollutant formation mechanisms that operate on timescales ranging from microseconds for elementary chemical reactions to milliseconds for turbulent mixing processes.\n\n**Turbomachinery Aerodynamics:**\n\nThe blade cooling requirements create intricate interactions between aerodynamic performance and thermal management, as cooling air extraction reduces cycle efficiency while inadequate cooling leads to material degradation and potential catastrophic failure. The exhaust nozzle design influences both thrust generation and acoustic signature.\n\n**Combustion Physics:**\n\nThe Eddy Dissipation Concept (EDC) with finite-rate chemistry using a reduced Jet-A mechanism specifically developed for gas turbine applications was employed. The EDC model was selected over simpler mixing-limited models due to its superior capability for predicting pollutant formation, particularly NOx species that form through both thermal and prompt mechanisms requiring detailed chemical kinetics representation.",
+        image: {
+          src: "/lovable-uploads/acc3215f-9dc5-44be-8085-6269647d917a.png",
+          alt: "UAV Propulsion Optimization - High-fidelity ANSYS CFD simulation showing detailed pressure contour analysis of propeller blade aerodynamics with color-coded pressure distribution ranging from low (blue) to high (red) pressures, demonstrating the sophisticated computational fluid dynamics modeling techniques used to optimize blade geometry and performance characteristics for maximum thrust efficiency and reduced noise generation",
+          position: "left"
+        },
         equations: [
           {
             equation: "F = \\dot{m}(V_5 - V_0) + (P_5 - P_0)A_5",
