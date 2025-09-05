@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getAssetPath } from "@/lib/assets";
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -33,7 +34,7 @@ const HeroSection = () => {
         {/* Aerospace Image 1 - Left */}
         <div className="absolute top-1/4 left-8 md:left-16 lg:left-24 floating-card">
           <img
-            src="/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png"
+            src={getAssetPath("lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png")}
             alt="Ethiopian Airlines Fleet"
             className="w-32 md:w-40 lg:w-48 h-auto transform rotate-12 opacity-80"
             style={{ animationDelay: '0s' }}
@@ -43,7 +44,7 @@ const HeroSection = () => {
         {/* Aerospace Image 2 - Right */}
         <div className="absolute top-1/3 right-8 md:right-16 lg:right-24 floating-card">
           <img
-            src="/lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png"
+            src={getAssetPath("lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png")}
             alt="University of Florida Engineering Lab"
             className="w-32 md:w-40 lg:w-48 h-auto transform -rotate-12 opacity-80"
             style={{ animationDelay: '2s' }}
@@ -53,7 +54,7 @@ const HeroSection = () => {
         {/* Aerospace Image 3 - Top Left */}
         <div className="absolute top-16 left-1/4 floating-card hidden lg:block">
           <img
-            src="/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
+            src={getAssetPath("lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png")}
             alt="Jet Engine Turbine"
             className="w-48 xl:w-64 h-auto transform rotate-6 opacity-70"
             style={{ animationDelay: '1s' }}
@@ -63,7 +64,7 @@ const HeroSection = () => {
         {/* Aerospace Image 4 - Bottom Right */}
         <div className="absolute bottom-16 right-1/4 floating-card hidden lg:block">
           <img
-            src="/lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png"
+            src={getAssetPath("lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png")}
             alt="Jet Engine Testing"
             className="w-48 xl:w-64 h-auto transform -rotate-6 opacity-70"
             style={{ animationDelay: '3s' }}
