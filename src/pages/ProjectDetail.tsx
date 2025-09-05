@@ -9,16 +9,15 @@ import { CodePreview } from '@/components/CodePreview';
 import { MathEquation } from '@/components/MathEquation';
 
 // Enhanced project data structure for authoritative content
-// NOTE: This needs to be updated with the actual content from the 5 Google Drive documents
 const projectsData = {
-  1: {
-    id: 1,
-    title: "Mars Entry Vehicle Heat Shield Analysis",
-    subtitle: "Optimizing thermal protection systems for Mars atmospheric entry",
-    category: "Thermal Analysis",
+  "automated-valve-test": {
+    id: "automated-valve-test",
+    title: "Automated Valve Test Platform for High-Pressure Systems",
+    subtitle: "Python-driven automation system for aerospace grade valve testing",
+    category: "Test Automation",
     date: "2024",
-    author: "Aerospace Engineering Team",
-    tags: ["CFD", "Heat Transfer", "Mars Mission"],
+    author: "Aerospace Engineering Team", 
+    tags: ["High-Pressure Testing", "Python", "Automation"],
     hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
       {
@@ -217,15 +216,14 @@ else:
       }
     ]
   },
-  // NOTE: Add projects 2-5 with real content from Google Drive documents
-  2: {
-    id: 2,
-    title: "Automated Valve Test Platform",
-    subtitle: "High-Pressure Testing & Python Automation",
-    category: "Testing Automation",
+  "rga-sensor-integration": {
+    id: "rga-sensor-integration",
+    title: "RGA Sensor Integration with Unitree Go2 Robot",
+    subtitle: "Designed and simulated a robust mounting system to integrate a Residual Gas Analyzer sensor onto a quadruped robot",
+    category: "Mechanical Design",
     date: "2024",
     author: "Engineering Team",
-    tags: ["Python", "Automation", "Testing"],
+    tags: ["CAD Design", "Vibration Isolation", "Robotics Integration"],
     hero: "/lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png",
     sections: [
       {
@@ -240,14 +238,14 @@ else:
       }
     ]
   },
-  3: {
-    id: 3,
-    title: "RGA Sensor Integration",
-    subtitle: "CAD Design & Vibration Isolation for Robotics",
-    category: "Mechanical Design",
+  "uav-propulsion-optimization": {
+    id: "uav-propulsion-optimization",
+    title: "UAV Propulsion Optimization via High-Fidelity Simulation",
+    subtitle: "Conducted advanced CFD, combustion, and acoustic simulations of UAV propulsion systems for performance optimization",
+    category: "CFD Analysis",
     date: "2024",
     author: "Engineering Team",
-    tags: ["CAD", "Vibration", "Robotics"],
+    tags: ["ANSYS Fluent", "CFD Modeling", "LMS Virtual.Lab"],
     hero: "/lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png",
     sections: [
       {
@@ -262,14 +260,14 @@ else:
       }
     ]
   },
-  4: {
-    id: 4,
-    title: "UAV Propulsion Optimization",
-    subtitle: "CFD Modeling & Acoustic Analysis with ANSYS",
-    category: "CFD Analysis",
+  "vibration-fatigue-detection": {
+    id: "vibration-fatigue-detection",
+    title: "Vibration-Based Fatigue Risk Detection for NASA's MSolo Mass Spectrometer",
+    subtitle: "Developed real-time anomaly detection algorithms using FFT analysis and machine learning for fatigue risk assessment",
+    category: "Signal Processing",
     date: "2024",
     author: "Engineering Team",
-    tags: ["ANSYS", "CFD", "Acoustics"],
+    tags: ["FFT Analysis", "Machine Learning", "Real-Time Detection"],
     hero: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png",
     sections: [
       {
@@ -284,14 +282,14 @@ else:
       }
     ]
   },
-  5: {
-    id: 5,
-    title: "Satellite Thermal Control",
-    subtitle: "COMSOL Multiphysics & Space Environment Simulation",
-    category: "Thermal Analysis",
+  "uav-tail-fuselage": {
+    id: "uav-tail-fuselage",
+    title: "UAV Tail & Fuselage Variations for Stability Analysis",
+    subtitle: "Performed comprehensive stability analysis of various UAV design configurations to optimize flight performance",
+    category: "Aerodynamics",
     date: "2024",
     author: "Engineering Team",
-    tags: ["COMSOL", "Thermal", "Satellite"],
+    tags: ["Stability Analysis", "Flight Dynamics", "Design Optimization"],
     hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
       {
@@ -311,7 +309,7 @@ else:
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const project = projectsData[Number(id) as keyof typeof projectsData];
+  const project = projectsData[id as keyof typeof projectsData];
 
   if (!project) {
     return (
