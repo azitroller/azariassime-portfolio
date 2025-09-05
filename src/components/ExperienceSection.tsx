@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Calendar, MapPin, ExternalLink } from "lucide-react";
+import { getAssetPath } from "@/lib/assets";
 
 const ExperienceSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -149,7 +150,7 @@ const ExperienceSection = () => {
               Download my complete resume for detailed information about my technical skills and certifications.
             </p>
             <a 
-              href="/resume/Azarias-Simes-Resume.pdf" 
+              href={getAssetPath("resume/Azarias-Simes-Resume.pdf")} 
               download="Azarias-Simes-Resume.pdf"
               className="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-white/90 transition-all duration-300 inline-flex items-center gap-2"
             >
