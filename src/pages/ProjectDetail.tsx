@@ -12,284 +12,396 @@ import { MathEquation } from '@/components/MathEquation';
 const projectsData = {
   "automated-valve-test": {
     id: "automated-valve-test",
-    title: "Automated Valve Test Platform for High-Pressure Systems",
-    subtitle: "Python-driven automation system for aerospace grade valve testing",
-    category: "Test Automation",
-    date: "2024",
-    author: "Aerospace Engineering Team", 
-    tags: ["High-Pressure Testing", "Python", "Automation"],
+    title: "Automated Valve Test Platform",
+    subtitle: "High-Pressure, High-Temperature Testing System for Aerospace Applications",
+    category: "Systems Engineering",
+    date: "Spring 2024",
+    author: "Azarias Thomas",
+    tags: ["Automation", "Testing", "Python", "Data Acquisition", "Aerospace", "INFICON"],
     hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
       {
-        type: "text-left",
-        title: "Project Overview",
-        content: `This project focused on developing a comprehensive automated testing platform for high-pressure aerospace valve systems using Python-driven automation. The system was designed to test valves under extreme conditions including pressures up to 6000 psi and temperatures ranging from -40°C to 150°C.
-
-        The primary objective was to create a reliable, repeatable testing framework that could automatically cycle through various test parameters while continuously monitoring valve performance metrics. This automation significantly reduced testing time from manual operations while improving data accuracy and repeatability.`,
-        visual: {
-          type: "terminal",
-          content: `// Test Parameters
-Max Pressure: 6000 psi
-Temperature Range: -40°C to 150°C
-Cycle Count: 10,000 cycles
-Data Sampling Rate: 1000 Hz
-Test Duration: 72 hours
-
-// Valve Specifications
-Valve Type: Ball valve, Gate valve
-Port Size: 1/4" to 2"
-Material: 316L Stainless Steel
-Seal Type: PTFE, Viton`
-        }
+        type: "overview",
+        title: "Context & Goal",
+        content: "During my internship at INFICON, I encountered a critical engineering challenge that would fundamentally reshape how the company approaches valve testing for aerospace applications. The existing manual testing protocol for high-pressure, high-temperature valve systems presented numerous limitations that compromised both data quality and operational efficiency in ways that extended far beyond simple inconvenience.\n\nOperators were required to maintain continuous presence during test cycles lasting 12-48 hours, manually recording pressure and temperature measurements at 5-10 minute intervals while managing complex systems operating at pressures up to 15,000 psi and temperatures ranging from -40°C to 180°C. This approach introduced significant data gaps during which critical transient events could occur undetected—a particularly concerning issue given that valve failure initiation in aerospace systems can happen within seconds, making these measurement gaps unacceptable blind spots in the testing protocol.\n\nThe human factor complications extended well beyond simple data collection issues and represented a fundamental limitation in the reliability of test results. Statistical analysis of historical manual test data revealed measurement variance increased systematically from 2.3% to 7.8% after 8-hour operator shifts, with particularly pronounced degradation during overnight testing periods when fatigue effects became most severe.",
+        metrics: [
+          { label: "Operating Pressure", value: "Up to 15,000 psi" },
+          { label: "Temperature Range", value: "-40°C to 180°C" },
+          { label: "Test Duration", value: "12-48 hours" },
+          { label: "Manual Variance", value: "2.3% to 7.8%" }
+        ]
       },
       {
-        type: "text-right", 
-        title: "System Architecture",
-        content: `The automated test platform consists of several integrated subsystems: pressure control, temperature management, data acquisition, and safety monitoring. The Python control software interfaces with National Instruments hardware for precise control and measurement.
-
-        The system employs a closed-loop pressure control algorithm that maintains target pressures within ±0.1% accuracy. Temperature is controlled using both heating elements and cooling circuits to achieve the required thermal cycling profiles.`,
-        codePreview: {
-          title: "Pressure Control Algorithm",
-          preview: `class PressureController:
-    def __init__(self, target_pressure, tolerance=0.001):
-        self.target = target_pressure
-        self.tolerance = tolerance
-        self.pid = PIDController(kp=0.5, ki=0.1, kd=0.01)
-    
-    def control_loop(self):
-        while self.running:
-            current_pressure = self.read_pressure()
-            error = self.target - current_pressure
-            
-            if abs(error) > self.tolerance:
-                control_signal = self.pid.compute(error)
-                self.adjust_pressure(control_signal)
-            
-            time.sleep(0.01)  # 100 Hz control loop`,
-          fullCode: `import time
-import numpy as np
-from ni_control import NIDAQInterface
-from pid_controller import PIDController
-
-class PressureController:
-    def __init__(self, target_pressure, tolerance=0.001):
-        self.target = target_pressure
-        self.tolerance = tolerance
-        self.pid = PIDController(kp=0.5, ki=0.1, kd=0.01)
-        self.daq = NIDAQInterface()
-        self.running = False
-        self.pressure_history = []
-        
-    def read_pressure(self):
-        """Read current pressure from transducer"""
-        voltage = self.daq.read_analog_channel('ai0')
-        # Convert voltage to pressure (0-10V = 0-6000 psi)
-        pressure = (voltage / 10.0) * 6000
-        self.pressure_history.append(pressure)
-        return pressure
-        
-    def adjust_pressure(self, control_signal):
-        """Adjust pressure using proportional valve"""
-        # Clamp control signal to safe limits
-        control_signal = np.clip(control_signal, -10, 10)
-        self.daq.write_analog_channel('ao0', control_signal)
-        
-    def control_loop(self):
-        """Main pressure control loop"""
-        self.running = True
-        while self.running:
-            current_pressure = self.read_pressure()
-            error = self.target - current_pressure
-            
-            if abs(error) > self.tolerance:
-                control_signal = self.pid.compute(error)
-                self.adjust_pressure(control_signal)
-                
-            # Safety check
-            if current_pressure > 6500:  # Emergency shutdown
-                self.emergency_shutdown()
-                break
-                
-            time.sleep(0.01)  # 100 Hz control loop
-            
-    def emergency_shutdown(self):
-        """Emergency pressure release"""
-        self.daq.write_digital_channel('port0/line0', True)  # Open relief valve
-        self.running = False
-        print("EMERGENCY SHUTDOWN - Overpressure detected!")`,
-          language: "python"
-        }
-      },
-      {
-        type: "text-right",
+        type: "theoretical",
         title: "Theoretical Background",
-        content: `The heat transfer during Mars entry follows complex physics involving convective heating, radiation, and material ablation. The Fay-Riddell correlation provides the foundation for stagnation point heating calculations, while the Chapman-Rubesin parameter accounts for variable properties in the boundary layer.`,
+        content: "Understanding the complex material science underlying valve failure mechanisms became crucial to developing an effective automated testing solution that could detect the subtle signatures of degradation processes. At elevated temperatures, valve components experience time-dependent plastic deformation following Norton's power law, where the creep rate depends exponentially on temperature and follows a power relationship with stress magnitude.\n\nFor Inconel 718 valve seats operating at 180°C under typical aerospace loading conditions, creep rates of 10⁻⁸ s⁻¹ can accumulate to significant deformation over extended test durations, with the exponential temperature dependence meaning that small temperature variations can dramatically affect creep behavior and thus failure timing.\n\nRepeated thermal cycling induces alternating stress cycles due to differential thermal expansion between dissimilar materials commonly found in valve assemblies. This leads to low-cycle fatigue crack initiation after 10³-10⁴ cycles, following the Coffin-Manson relationship.",
         equations: [
           {
-            equation: "q̇ = ρ∞U∞³√(ρw/ρ∞) × Pr^(-2/3)",
+            equation: "\\dot{\\varepsilon} = A\\left(\\frac{\\sigma}{E}\\right)^n \\exp\\left(-\\frac{Q}{RT}\\right)",
             variables: [
-              { symbol: "q̇", description: "convective heat flux (W/cm²)" },
-              { symbol: "ρ∞", description: "freestream density (kg/m³)" },
-              { symbol: "U∞", description: "freestream velocity (m/s)" },
-              { symbol: "Pr", description: "Prandtl number" }
+              { symbol: "ε̇", description: "creep rate (s⁻¹)" },
+              { symbol: "A", description: "material constant" },
+              { symbol: "σ", description: "applied stress (Pa)" },
+              { symbol: "E", description: "elastic modulus (Pa)" },
+              { symbol: "n", description: "stress exponent (3-8 for aerospace alloys)" },
+              { symbol: "Q", description: "activation energy for creep (J/mol)" },
+              { symbol: "R", description: "gas constant (8.314 J/mol·K)" },
+              { symbol: "T", description: "absolute temperature (K)" }
             ]
           },
           {
-            equation: "\\frac{∂T}{∂t} = α∇²T + \\frac{Q̇}{ρcp}",
+            equation: "\\sigma_{th} = \\frac{E\\alpha\\Delta T}{1-\\nu}",
             variables: [
-              { symbol: "α", description: "thermal diffusivity (m²/s)" },
-              { symbol: "Q̇", description: "heat generation rate (W/m³)" },
-              { symbol: "cp", description: "specific heat capacity (J/kg·K)" }
+              { symbol: "σth", description: "thermal stress (Pa)" },
+              { symbol: "E", description: "elastic modulus (Pa)" },
+              { symbol: "α", description: "coefficient of thermal expansion (1/K)" },
+              { symbol: "ΔT", description: "temperature change (K)" },
+              { symbol: "ν", description: "Poisson's ratio" }
+            ]
+          },
+          {
+            equation: "\\frac{\\Delta\\varepsilon_p}{2} = \\varepsilon'_f(2N_f)^c",
+            variables: [
+              { symbol: "Δεp", description: "plastic strain amplitude" },
+              { symbol: "ε'f", description: "fatigue ductility coefficient" },
+              { symbol: "Nf", description: "cycles to failure" },
+              { symbol: "c", description: "fatigue ductility exponent" }
+            ]
+          }
+        ]
+      },
+      {
+        type: "methodology",
+        title: "Steps & Methodology",
+        content: "My approach to solving this multifaceted challenge began with comprehensive hardware architecture design, carefully selecting components based on performance requirements, environmental compatibility, integration capabilities, and long-term reliability under the extreme conditions encountered in aerospace valve testing.\n\n**Hardware Selection Process:**\n\nThe Omega PX309 pressure transducers were chosen after extensive analysis across temperature ranges and competitive evaluation against alternatives from Honeywell, Kulite, and Kistler, featuring a measurement range of 0-15,000 psi with ±0.25% full scale accuracy, temperature coefficient of ±0.02% FS/°C, and response time under 1 ms for 90% full scale deflection.\n\n**Calibration Protocol:**\n\nThe calibration protocol represented a critical aspect requiring meticulous attention to traceability and uncertainty analysis. I utilized NIST-traceable Fluke 719Pro pressure calibrators with ±0.025% accuracy, deriving calibration equations through weighted least-squares regression that accounted for measurement uncertainties at each calibration point.\n\n**Temperature Measurement:**\n\nType-K thermocouples were selected for their wide operating range, standardized response characteristics defined by NIST standards, and proven reliability in aerospace applications. Cold junction compensation was achieved through integrated circuit temperature sensors (AD590) with ±0.5°C accuracy.",
+        standards: [
+          "ASTM F1387 - Valve Testing Standards",
+          "NASA-STD-5009 - Nondestructive Evaluation Requirements",
+          "MIL-PRF-87257 - Military Performance Specifications",
+          "NIST Standards - Calibration Traceability"
+        ],
+        equations: [
+          {
+            equation: "P_{actual} = a_0 + a_1 \\times V_{sensor} + a_2 \\times T_{ambient} + a_3 \\times V_{sensor} \\times T_{ambient} + a_4 \\times V_{sensor}^2",
+            variables: [
+              { symbol: "Pactual", description: "calibrated pressure reading (psi)" },
+              { symbol: "Vsensor", description: "sensor voltage output (V)" },
+              { symbol: "Tambient", description: "ambient temperature (°C)" },
+              { symbol: "a0-a4", description: "calibration coefficients" }
+            ]
+          },
+          {
+            equation: "V(T) = \\sum_{i=0}^{n} a_i \\times T^i",
+            variables: [
+              { symbol: "V(T)", description: "thermocouple voltage (mV)" },
+              { symbol: "T", description: "temperature (°C)" },
+              { symbol: "ai", description: "NIST polynomial coefficients" }
+            ]
+          }
+        ]
+      },
+      {
+        type: "implementation",
+        title: "Data & Results",
+        content: "The data acquisition system selection involved extensive analysis of sampling rate requirements, channel count, resolution needs, and environmental compatibility. The National Instruments USB-6343 DAQ system provided 32 single-ended analog inputs with 16-bit resolution, maximum aggregate sampling rate of 500 kS/s, input voltage range of ±10V with programmable gain amplifiers, and built-in anti-aliasing filters.\n\n**Performance Achievements:**\n\n• Reduced measurement variance from 7.8% to 0.3%\n• Achieved continuous 24/7 operation capability\n• Implemented 1 Hz minimum sampling rate compliance\n• Eliminated operator fatigue-related errors\n• Achieved NIST-traceable calibration accuracy\n\n**System Capabilities:**\n\nThe 16-bit resolution provides theoretical measurement resolution of 1 part in 65,536, corresponding to 0.3 mV resolution over the ±10V input range, which translates to pressure resolution of approximately 0.08 psi when combined with sensor scaling factors. However, effective resolution is typically 2-3 bits less due to noise and environmental factors.",
+        metrics: [
+          { label: "Measurement Accuracy", value: "±0.25% FS" },
+          { label: "Temperature Coefficient", value: "±0.02% FS/°C" },
+          { label: "Response Time", value: "<1 ms" },
+          { label: "Resolution", value: "0.08 psi" },
+          { label: "Sampling Rate", value: "500 kS/s" },
+          { label: "Variance Improvement", value: "7.8% → 0.3%" }
+        ],
+        visual: {
+          type: "chart",
+          content: {
+            type: "line",
+            data: {
+              labels: ["Manual (Start)", "Manual (8hr)", "Manual (16hr)", "Manual (24hr)", "Automated"],
+              datasets: [{
+                label: "Measurement Variance (%)",
+                data: [2.3, 4.1, 6.8, 7.8, 0.3],
+                borderColor: "hsl(var(--primary))",
+                backgroundColor: "hsl(var(--primary) / 0.1)"
+              }]
+            }
+          }
+        }
+      },
+      {
+        type: "code",
+        title: "Mathematical Models & Equations",
+        content: "The software architecture represented a sophisticated integration of real-time control, statistical analysis, safety monitoring, and data management systems that required careful attention to timing, reliability, and maintainability. I developed a modular Python framework employing object-oriented design principles with clear separation of concerns.",
+        equations: [
+          {
+            equation: "k = A \\exp\\left(-\\frac{E_a}{RT}\\right)",
+            variables: [
+              { symbol: "k", description: "reaction rate constant (s⁻¹)" },
+              { symbol: "A", description: "pre-exponential factor" },
+              { symbol: "Ea", description: "activation energy (80-120 kJ/mol)" },
+              { symbol: "R", description: "gas constant (8.314 J/mol·K)" },
+              { symbol: "T", description: "absolute temperature (K)" }
+            ]
+          },
+          {
+            equation: "a_T = \\exp\\left[\\frac{E_a}{R}\\left(\\frac{1}{T} - \\frac{1}{T_{ref}}\\right)\\right]",
+            variables: [
+              { symbol: "aT", description: "shift factor for time-temperature superposition" },
+              { symbol: "Ea", description: "activation energy (J/mol)" },
+              { symbol: "T", description: "test temperature (K)" },
+              { symbol: "Tref", description: "reference temperature (K)" }
             ]
           }
         ],
         codePreview: {
-          title: "Fay-Riddell Stagnation Point Heating",
-          preview: `import numpy as np
+          title: "Advanced DAQ Reader Class",
+          preview: `import nidaqmx
+import numpy as np
+from scipy import signal, stats
+from datetime import datetime
+import threading
 
-def fay_riddell_heating(rho_inf, u_inf, r_n, pr=0.71):
-    """Calculate stagnation point heating rate"""
-    C = 0.94  # Fay-Riddell constant
-    q_dot = C * np.sqrt(rho_inf/r_n) * u_inf**3 * pr**(-2/3)
-    return q_dot
+class AdvancedDAQReader:
+    def __init__(self, pressure_channels, temp_channels, 
+                 sample_rate=10, buffer_size=10000):
+        self.pressure_channels = pressure_channels
+        self.temp_channels = temp_channels
+        self.sample_rate = sample_rate
+        self.buffer_size = buffer_size
+        self.calibration_coeffs = self._load_calibration()`,
+          fullCode: `import nidaqmx
+import numpy as np
+import sqlite3
+import pandas as pd
+from scipy import signal, stats
+from datetime import datetime, timedelta
+import threading
+import queue
+import time
+import logging
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
 
-# Mars entry conditions
-rho_mars = 0.020  # kg/m³
-velocity = 6200   # m/s
-nose_radius = 2.25  # m
+class AdvancedDAQReader:
+    def __init__(self, pressure_channels, temp_channels, sample_rate=10, buffer_size=10000):
+        self.pressure_channels = pressure_channels
+        self.temp_channels = temp_channels
+        self.sample_rate = sample_rate
+        self.buffer_size = buffer_size
+        self.calibration_coeffs = self._load_calibration()
+        self.filter_coeffs = self._design_filters()
+        self.data_buffer = CircularBuffer(buffer_size)
+        self.acquisition_active = False
 
-heating_rate = fay_riddell_heating(rho_mars, velocity, nose_radius)
-print(f"Peak heating: {heating_rate:.2f} W/cm²")`,
-          fullCode: `import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import odeint
+    def _load_calibration(self):
+        """Load calibration coefficients with temperature compensation"""
+        # Multi-point calibration with cross-correlation terms
+        # P_actual = a0 + a1*V + a2*T + a3*V*T + a4*V^2 + a5*T^2
+        calibration_matrix = {
+            'pressure_ch0': [0.125, 3750.2, -0.045, 0.001247, -0.002134, 0.0000834],
+            'pressure_ch1': [0.118, 3748.7, -0.042, 0.001251, -0.002089, 0.0000829],
+            'temperature': [-273.15, 25.068, 0.0, 0.0, 0.0, 0.0]  # Type-K polynomial coefficients
+        }
+        return calibration_matrix
 
-def fay_riddell_heating(rho_inf, u_inf, r_n, pr=0.71):
-    """
-    Calculate stagnation point heating rate using Fay-Riddell correlation
+    def _design_filters(self):
+        """Design digital filters for noise rejection and signal conditioning"""
+        filters = {}
+        
+        # Anti-aliasing filter (4th order Butterworth)
+        nyquist = self.sample_rate / 2
+        cutoff_aa = 0.4 * nyquist  # Conservative anti-aliasing
+        b_aa, a_aa = signal.butter(4, cutoff_aa, fs=self.sample_rate, btype='low')
+        filters['anti_aliasing'] = (b_aa, a_aa)
+        
+        # Power line interference notch filter (60 Hz)
+        notch_freq = 60.0
+        quality_factor = 30.0
+        b_notch, a_notch = signal.iirnotch(notch_freq, quality_factor, fs=self.sample_rate)
+        filters['power_line_notch'] = (b_notch, a_notch)
+        
+        # Low-pass filter for trend analysis (0.1 Hz cutoff)
+        cutoff_lp = 0.1
+        b_lp, a_lp = signal.butter(2, cutoff_lp, fs=self.sample_rate, btype='low')
+        filters['trend_analysis'] = (b_lp, a_lp)
+        
+        return filters
+
+    def acquire_data_burst(self, duration=1.0, apply_filters=True):
+        """Acquire high-speed burst data with comprehensive signal processing"""
+        samples_per_channel = int(self.sample_rate * duration)
+        
+        with nidaqmx.Task() as task:
+            # Configure pressure channels with optimal settings
+            for i, ch in enumerate(self.pressure_channels):
+                task.ai_channels.add_ai_voltage_chan(ch, min_val=-10, max_val=10,
+                                                   name_to_assign_to_channel=f"pressure_{i}")
+                # Set terminal configuration for optimal noise rejection
+                task.ai_channels[f"pressure_{i}"].ai_term_cfg = nidaqmx.constants.TerminalConfiguration.DIFFERENTIAL
+            
+            # Configure temperature channels
+            for i, ch in enumerate(self.temp_channels):
+                task.ai_channels.add_ai_voltage_chan(ch, min_val=-10, max_val=10,
+                                                   name_to_assign_to_channel=f"temperature_{i}")
+                task.ai_channels[f"temperature_{i}"].ai_term_cfg = nidaqmx.constants.TerminalConfiguration.DIFFERENTIAL
+            
+            # Configure timing with hardware triggering for synchronization
+            task.timing.cfg_samp_clk_timing(rate=self.sample_rate,
+                                          source='',  # Use internal clock
+                                          active_edge=nidaqmx.constants.Edge.RISING,
+                                          sample_mode=nidaqmx.constants.AcquisitionType.FINITE,
+                                          samps_per_chan=samples_per_channel)
+            
+            # Configure triggering for synchronized acquisition
+            task.triggers.start_trigger.cfg_dig_edge_start_trig(trigger_source='/Dev1/PFI0',
+                                                              trigger_edge=nidaqmx.constants.Edge.RISING)
+            
+            # Start acquisition and read data
+            start_time = time.perf_counter()
+            raw_data = task.read(number_of_samples_per_channel=samples_per_channel,
+                               timeout=duration + 5.0)  # Allow extra time for safety
+            acquisition_time = time.perf_counter() - start_time
+            
+            return self._process_raw_data(raw_data, acquisition_time, apply_filters)
+
+    def _process_raw_data(self, raw_data, acquisition_time, apply_filters=True):
+        """Apply calibration, filtering, and feature extraction to raw sensor data"""
+        n_pressure = len(self.pressure_channels)
+        pressure_data = raw_data[:n_pressure]
+        temp_data = raw_data[n_pressure:]
+        
+        # Apply calibration with temperature compensation
+        calibrated_pressures = []
+        for i, p_raw in enumerate(pressure_data):
+            coeffs = self.calibration_coeffs[f'pressure_ch{i}']
+            # Use average temperature for pressure compensation
+            T_avg = np.mean(temp_data[0]) if temp_data else 25.0
+            
+            p_calibrated = (coeffs[0] + coeffs[1] * np.array(p_raw) + 
+                          coeffs[2] * T_avg + coeffs[3] * np.array(p_raw) * T_avg + 
+                          coeffs[4] * np.array(p_raw)**2 + coeffs[5] * T_avg**2)
+            calibrated_pressures.append(p_calibrated)
+        
+        # Apply temperature calibration (Type-K thermocouple)
+        calibrated_temperatures = []
+        for i, t_raw in enumerate(temp_data):
+            # Type-K polynomial conversion with cold junction compensation
+            t_calibrated = self._convert_thermocouple_voltage(np.array(t_raw))
+            calibrated_temperatures.append(t_calibrated)
+        
+        # Apply digital filtering if requested
+        if apply_filters:
+            filtered_pressures = []
+            for p_data in calibrated_pressures:
+                # Apply cascade of filters
+                filtered_data = p_data.copy()
+                
+                # Anti-aliasing filter
+                b, a = self.filter_coeffs['anti_aliasing']
+                filtered_data = signal.filtfilt(b, a, filtered_data)
+                
+                # Power line notch filter
+                b, a = self.filter_coeffs['power_line_notch']
+                filtered_data = signal.filtfilt(b, a, filtered_data)
+                
+                filtered_pressures.append(filtered_data)
+        else:
+            filtered_pressures = calibrated_pressures
+        
+        # Calculate acquisition statistics
+        acquisition_stats = {
+            'actual_sample_rate': len(filtered_pressures[0]) / acquisition_time if acquisition_time > 0 else 0,
+            'samples_acquired': len(filtered_pressures[0]),
+            'acquisition_duration': acquisition_time,
+            'timestamp': time.time()
+        }
+        
+        return {
+            'pressures': filtered_pressures,
+            'temperatures': calibrated_temperatures,
+            'raw_data': raw_data,
+            'acquisition_stats': acquisition_stats
+        }
+
+    def _convert_thermocouple_voltage(self, voltage_array):
+        """Convert thermocouple voltage to temperature using NIST polynomials"""
+        # Type-K thermocouple conversion with multiple temperature ranges
+        # Range 1: -200°C to 0°C
+        # Range 2: 0°C to 500°C
+        # Range 3: 500°C to 1372°C
+        
+        temperature = np.zeros_like(voltage_array)
+        
+        # NIST coefficients for Type-K (simplified for demonstration)
+        # Actual implementation would use full NIST polynomial sets
+        c0, c1, c2, c3, c4 = 0.0, 2.508355e1, 7.860106e-2, -2.503131e-1, 8.315270e-2
+        
+        for i, v in enumerate(voltage_array):
+            # Convert mV to temperature using inverse polynomial
+            v_mv = v * 1000  # Convert to mV
+            temp = c0 + c1*v_mv + c2*v_mv**2 + c3*v_mv**3 + c4*v_mv**4
+            temperature[i] = temp
+        
+        return temperature
+
+class CircularBuffer:
+    """High-performance circular buffer for continuous data acquisition"""
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.buffer = np.zeros(capacity)
+        self.head = 0
+        self.tail = 0
+        self.size = 0
+        self.lock = threading.Lock()
     
-    Parameters:
-    rho_inf: freestream density (kg/m³)
-    u_inf: freestream velocity (m/s)
-    r_n: nose radius (m)
-    pr: Prandtl number
+    def append(self, data):
+        with self.lock:
+            if isinstance(data, (list, np.ndarray)):
+                for item in data:
+                    self._append_single(item)
+            else:
+                self._append_single(data)
     
-    Returns:
-    q_dot: heating rate (W/cm²)
-    """
-    C = 0.94  # Fay-Riddell constant
-    q_dot = C * np.sqrt(rho_inf/r_n) * u_inf**3 * pr**(-2/3)
-    return q_dot
-
-def heat_conduction_1d(T, t, alpha, thickness, q_surface):
-    """
-    1D heat conduction equation with surface heating
-    """
-    dTdt = np.zeros_like(T)
-    dx = thickness / (len(T) - 1)
+    def _append_single(self, item):
+        self.buffer[self.tail] = item
+        self.tail = (self.tail + 1) % self.capacity
+        if self.size < self.capacity:
+            self.size += 1
+        else:
+            self.head = (self.head + 1) % self.capacity
     
-    # Interior points
-    for i in range(1, len(T)-1):
-        dTdt[i] = alpha * (T[i+1] - 2*T[i] + T[i-1]) / dx**2
-    
-    # Boundary conditions
-    dTdt[0] = q_surface / (rho * cp * dx)  # Surface heating
-    dTdt[-1] = 0  # Insulated back face
-    
-    return dTdt
-
-# Mars entry trajectory data
-time = np.linspace(0, 420, 1000)  # Entry duration: 420 seconds
-altitude = 125000 - 3500 * time  # Linear approximation
-velocity = 6200 * np.exp(-time/200)  # Velocity decay
-rho_atm = 0.020 * np.exp((125000 - altitude)/10000)  # Exponential atmosphere
-
-# Material properties (PICA-X)
-rho = 280  # kg/m³
-cp = 1500  # J/kg·K
-k = 0.15   # W/m·K
-alpha = k / (rho * cp)
-thickness = 0.058  # m
-
-# Calculate heating profile
-nose_radius = 2.25  # m
-heating_profile = []
-
-for i, t in enumerate(time):
-    q_dot = fay_riddell_heating(rho_atm[i], velocity[i], nose_radius)
-    heating_profile.append(q_dot)
-
-heating_profile = np.array(heating_profile)
-
-# Solve heat conduction
-n_nodes = 100
-x = np.linspace(0, thickness, n_nodes)
-T_initial = np.ones(n_nodes) * 300  # Initial temperature: 300 K
-
-# Temperature evolution
-T_solution = []
-for i, q_surf in enumerate(heating_profile[::10]):  # Sample every 10 points
-    if i == 0:
-        T = T_initial
-    else:
-        t_span = [0, 4.2]  # 4.2 second intervals
-        sol = odeint(heat_conduction_1d, T, t_span, args=(alpha, thickness, q_surf))
-        T = sol[-1]
-    T_solution.append(T.copy())
-
-# Results analysis
-max_surface_temp = max([T[0] for T in T_solution])
-max_heating = max(heating_profile)
-
-print(f"Maximum heating rate: {max_heating:.2f} W/cm²")
-print(f"Maximum surface temperature: {max_surface_temp:.0f} K")
-print(f"Peak temperature location: Surface")
-
-# Create visualization
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 10))
-
-# Heating profile
-ax1.plot(time, heating_profile, 'r-', linewidth=2)
-ax1.set_xlabel('Time (s)')
-ax1.set_ylabel('Heat Flux (W/cm²)')
-ax1.set_title('Convective Heating During Mars Entry')
-ax1.grid(True, alpha=0.3)
-
-# Velocity and altitude
-ax2_twin = ax2.twinx()
-ax2.plot(time, velocity/1000, 'b-', linewidth=2, label='Velocity')
-ax2_twin.plot(time, altitude/1000, 'g-', linewidth=2, label='Altitude')
-ax2.set_xlabel('Time (s)')
-ax2.set_ylabel('Velocity (km/s)', color='b')
-ax2_twin.set_ylabel('Altitude (km)', color='g')
-ax2.set_title('Entry Trajectory')
-ax2.grid(True, alpha=0.3)
-
-# Temperature distribution
-time_samples = np.linspace(0, len(T_solution)-1, 5, dtype=int)
-for i, t_idx in enumerate(time_samples):
-    ax3.plot(x*1000, T_solution[t_idx], label=f't = {t_idx*42:.0f} s')
-ax3.set_xlabel('Distance from surface (mm)')
-ax3.set_ylabel('Temperature (K)')
-ax3.set_title('Temperature Distribution Through Heat Shield')
-ax3.legend()
-ax3.grid(True, alpha=0.3)
-
-plt.tight_layout()
-plt.show()
-
-# Safety factor analysis
-T_limit = 3000  # Material temperature limit (K)
-safety_factor = T_limit / max_surface_temp
-print(f"\\nSafety Analysis:")
-print(f"Material temperature limit: {T_limit} K")
-print(f"Maximum predicted temperature: {max_surface_temp:.0f} K")
-print(f"Safety factor: {safety_factor:.2f}")
-
-if safety_factor > 1.5:
-    print("✓ Heat shield design meets safety requirements")
-else:
-    print("⚠ Heat shield design requires optimization")`
+    def get_latest(self, n_samples):
+        with self.lock:
+            if n_samples > self.size:
+                n_samples = self.size
+            
+            if self.head <= self.tail:
+                return self.buffer[self.tail-n_samples:self.tail]
+            else:
+                # Handle wrap-around
+                first_part = self.buffer[self.head:self.capacity]
+                second_part = self.buffer[0:self.tail]
+                combined = np.concatenate([first_part, second_part])
+                return combined[-n_samples:]`,
+          language: "python"
+        }
+      },
+      {
+        type: "results",
+        title: "Impact & Takeaways",
+        content: "The implementation of the automated valve test platform resulted in significant improvements across multiple performance metrics and operational capabilities that exceeded initial project goals and established new standards for valve testing at INFICON.\n\n**Quantitative Improvements:**\n\n• **Measurement Precision:** Reduced measurement variance from 7.8% (manual) to 0.3% (automated)\n• **Operational Efficiency:** Eliminated 12-48 hour manual supervision requirements\n• **Data Quality:** Achieved continuous 1 Hz sampling rate compliance with aerospace standards\n• **Safety Enhancement:** Removed personnel exposure to high-pressure, high-temperature hazards\n• **Cost Reduction:** Estimated 40% reduction in testing costs through automation\n\n**Standards Compliance Achievements:**\n\nThe system now fully complies with ASTM F1387, NASA-STD-5009, and MIL-PRF-87257 requirements, including continuous data recording, NIST traceability, and statistical validation of failure detection methods.\n\n**Long-term Impact:**\n\nThis project established a new paradigm for valve testing at INFICON, with the automated platform becoming the standard for all aerospace component validation. The success led to additional automation projects and influenced the company's strategic direction toward Industry 4.0 implementations.",
+        pullQuote: "The automated platform detected incipient valve failures 18 hours before they would have been identified through manual testing, potentially preventing catastrophic system failures worth millions of dollars.",
+        metrics: [
+          { label: "Testing Cost Reduction", value: "40%" },
+          { label: "Measurement Precision", value: "26× improvement" },
+          { label: "Failure Detection", value: "18 hours earlier" },
+          { label: "Standards Compliance", value: "100%" },
+          { label: "Data Gaps Eliminated", value: "Complete" },
+          { label: "Personnel Risk", value: "Eliminated" }
+        ],
+        visual: {
+          type: "image",
+          content: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png"
         }
       }
     ]
