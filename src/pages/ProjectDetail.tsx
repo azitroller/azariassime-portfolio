@@ -174,20 +174,20 @@ const projectsData = {
           }
         ],
         codePreview: {
-          title: "Advanced DAQ Reader Class",
+          title: "Automated Valve Test Platform - Complete System",
           preview: `import nidaqmx
 import numpy as np
 from scipy import signal, stats
-from datetime import datetime
+from sklearn.ensemble import RandomForestClassifier
 import threading
+import sqlite3
+import time
 
 class AdvancedDAQReader:
     def __init__(self, pressure_channels, temp_channels, 
                  sample_rate=10, buffer_size=10000):
         self.pressure_channels = pressure_channels
         self.temp_channels = temp_channels
-        self.sample_rate = sample_rate
-        self.buffer_size = buffer_size
         self.calibration_coeffs = self._load_calibration()`,
           fullCode: `import nidaqmx
 import numpy as np
@@ -403,6 +403,361 @@ class CircularBuffer:
                 second_part = self.buffer[0:self.tail]
                 combined = np.concatenate([first_part, second_part])
                 return combined[-n_samples:]`,
+          fullCode: `import nidaqmx
+import numpy as np
+import sqlite3
+import pandas as pd
+from scipy import signal, stats
+from datetime import datetime, timedelta
+import threading
+import queue
+import time
+import logging
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+
+class AdvancedDAQReader:
+    def __init__(self, pressure_channels, temp_channels, sample_rate=10, buffer_size=10000):
+        self.pressure_channels = pressure_channels
+        self.temp_channels = temp_channels
+        self.sample_rate = sample_rate
+        self.buffer_size = buffer_size
+        self.calibration_coeffs = self._load_calibration()
+        self.filter_coeffs = self._design_filters()
+        self.data_buffer = CircularBuffer(buffer_size)
+        self.acquisition_active = False
+
+    def _load_calibration(self):
+        """Load calibration coefficients with temperature compensation"""
+        calibration_matrix = {
+            'pressure_ch0': [0.125, 3750.2, -0.045, 0.001247, -0.002134, 0.0000834],
+            'pressure_ch1': [0.118, 3748.7, -0.042, 0.001251, -0.002089, 0.0000829],
+            'temperature': [-273.15, 25.068, 0.0, 0.0, 0.0, 0.0]
+        }
+        return calibration_matrix
+
+    def acquire_data_burst(self, duration=1.0, apply_filters=True):
+        """Acquire high-speed burst data with comprehensive signal processing"""
+        samples_per_channel = int(self.sample_rate * duration)
+        
+        with nidaqmx.Task() as task:
+            for i, ch in enumerate(self.pressure_channels):
+                task.ai_channels.add_ai_voltage_chan(ch, min_val=-10, max_val=10)
+                task.ai_channels[f"pressure_{i}"].ai_term_cfg = nidaqmx.constants.TerminalConfiguration.DIFFERENTIAL
+            
+            task.timing.cfg_samp_clk_timing(rate=self.sample_rate)
+            raw_data = task.read(number_of_samples_per_channel=samples_per_channel)
+            
+            return self._process_raw_data(raw_data, duration, apply_filters)
+
+class StatisticalFailureDetector:
+    """Advanced statistical analysis for valve failure detection"""
+    def __init__(self, detection_threshold=3.0):
+        self.detection_threshold = detection_threshold
+        self.failure_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+        self.feature_scaler = StandardScaler()
+        self.baseline_stats = {}
+        self.control_limits = {}
+        self.trained = False
+
+    def train_failure_classifier(self, training_data, failure_labels):
+        """Train machine learning classifier on historical failure data"""
+        features = self._extract_failure_features(training_data)
+        features_scaled = self.feature_scaler.fit_transform(features)
+        self.failure_classifier.fit(features_scaled, failure_labels)
+        self.trained = True
+
+    def _extract_failure_features(self, data_segments):
+        """Extract statistical features indicative of valve degradation"""
+        features = []
+        
+        for segment in data_segments:
+            pressure_data = segment['pressures'][0]
+            temp_data = segment['temperatures'][0] if segment['temperatures'] else []
+            
+            feature_vector = [
+                np.mean(pressure_data), np.std(pressure_data), 
+                np.max(pressure_data) - np.min(pressure_data),
+                stats.skew(pressure_data), stats.kurtosis(pressure_data),
+                np.percentile(pressure_data, 95) - np.percentile(pressure_data, 5),
+                len(self._detect_outliers(pressure_data)) / len(pressure_data),
+                self._calculate_trend_strength(pressure_data),
+                self._calculate_autocorrelation(pressure_data, lag=1)
+            ]
+            
+            if temp_data:
+                feature_vector.extend([
+                    np.mean(temp_data), np.std(temp_data),
+                    np.corrcoef(pressure_data[:len(temp_data)], temp_data)[0,1] if len(temp_data) == len(pressure_data) else 0
+                ])
+            
+            features.append(feature_vector)
+        
+        return np.array(features)
+
+    def detect_failure_patterns(self, current_data):
+        """Real-time failure detection using multiple statistical methods"""
+        if not self.trained:
+            return {'failure_probability': 0.0, 'risk_level': 'unknown', 'anomalies': []}
+        
+        features = self._extract_failure_features([current_data])
+        features_scaled = self.feature_scaler.transform(features)
+        failure_probability = self.failure_classifier.predict_proba(features_scaled)[0, 1]
+        
+        spc_violations = self._check_spc_violations(current_data)
+        anomalies = self._detect_anomalies(current_data)
+        risk_level = self._assess_risk_level(failure_probability, spc_violations, anomalies)
+        
+        return {
+            'failure_probability': failure_probability,
+            'risk_level': risk_level,
+            'spc_violations': spc_violations,
+            'anomalies': anomalies,
+            'recommendations': self._generate_recommendations(risk_level, anomalies)
+        }
+
+    def _detect_outliers(self, data, method='iqr'):
+        """Detect statistical outliers using IQR method"""
+        Q1, Q3 = np.percentile(data, [25, 75])
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        return np.where((data < lower_bound) | (data > upper_bound))[0]
+
+    def _calculate_trend_strength(self, data):
+        """Calculate trend strength using linear regression"""
+        x = np.arange(len(data))
+        slope, _, r_value, _, _ = stats.linregress(x, data)
+        return abs(r_value * slope)
+
+class ComprehensiveDataLogger:
+    """High-performance data logging with automatic backup and compression"""
+    def __init__(self, database_path, backup_interval=3600):
+        self.database_path = database_path
+        self.backup_interval = backup_interval
+        self.connection_pool = queue.Queue(maxsize=10)
+        self.logging_active = False
+        self.data_queue = queue.Queue(maxsize=1000)
+        self.compression_level = 6
+        
+        self._initialize_database()
+        self._start_logging_thread()
+
+    def _initialize_database(self):
+        """Initialize SQLite database with optimized schema"""
+        conn = sqlite3.connect(self.database_path)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS test_data (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp REAL NOT NULL,
+                test_id TEXT NOT NULL,
+                pressure_ch0 REAL,
+                pressure_ch1 REAL,
+                temperature_avg REAL,
+                cycle_count INTEGER,
+                test_phase TEXT,
+                data_quality_score REAL,
+                INDEX(timestamp),
+                INDEX(test_id),
+                INDEX(test_phase)
+            )
+        ''')
+        
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS failure_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp REAL NOT NULL,
+                test_id TEXT NOT NULL,
+                failure_type TEXT,
+                severity_level INTEGER,
+                failure_probability REAL,
+                sensor_data TEXT,
+                mitigation_actions TEXT
+            )
+        ''')
+        
+        conn.commit()
+        conn.close()
+
+    def log_test_data(self, timestamp, test_id, sensor_data, metadata=None):
+        """Queue sensor data for high-performance logging"""
+        log_entry = {
+            'timestamp': timestamp,
+            'test_id': test_id,
+            'sensor_data': sensor_data,
+            'metadata': metadata or {}
+        }
+        
+        try:
+            self.data_queue.put_nowait(log_entry)
+        except queue.Full:
+            logging.warning("Data logging queue full - dropping oldest entries")
+            for _ in range(10):
+                try:
+                    self.data_queue.get_nowait()
+                except queue.Empty:
+                    break
+            self.data_queue.put_nowait(log_entry)
+
+    def _start_logging_thread(self):
+        """Start background thread for database operations"""
+        self.logging_active = True
+        self.logging_thread = threading.Thread(target=self._logging_worker, daemon=True)
+        self.logging_thread.start()
+
+    def _logging_worker(self):
+        """Background worker for database operations"""
+        batch_size = 100
+        batch_data = []
+        last_backup = time.time()
+        
+        while self.logging_active:
+            try:
+                timeout = 1.0 if len(batch_data) == 0 else 0.1
+                log_entry = self.data_queue.get(timeout=timeout)
+                batch_data.append(log_entry)
+                
+                if len(batch_data) >= batch_size or (time.time() - last_backup > self.backup_interval):
+                    self._write_batch_to_database(batch_data)
+                    batch_data.clear()
+                    
+                    if time.time() - last_backup > self.backup_interval:
+                        self._create_backup()
+                        last_backup = time.time()
+                        
+            except queue.Empty:
+                if batch_data:
+                    self._write_batch_to_database(batch_data)
+                    batch_data.clear()
+            except Exception as e:
+                logging.error(f"Database logging error: {e}")
+
+class AdaptiveSafetySystem:
+    """Multi-layered safety system with predictive shutdown capabilities"""
+    def __init__(self, pressure_limits, temperature_limits):
+        self.pressure_limits = pressure_limits  # {'min': psi, 'max': psi, 'rate_limit': psi/s}
+        self.temperature_limits = temperature_limits  # {'min': C, 'max': C, 'rate_limit': C/s}
+        self.safety_state = 'normal'  # normal, warning, critical, emergency_stop
+        self.shutdown_triggers = []
+        self.safety_margins = {'pressure': 0.95, 'temperature': 0.95}  # 5% safety margin
+        self.predictive_window = 30  # seconds for predictive analysis
+        
+        self.emergency_valves = []
+        self.safety_interlocks = []
+        self.alarm_outputs = []
+
+    def evaluate_safety_conditions(self, current_data, trend_data=None):
+        """Comprehensive safety evaluation with predictive analysis"""
+        safety_status = {
+            'state': 'normal',
+            'violations': [],
+            'warnings': [],
+            'actions_taken': [],
+            'predicted_violations': []
+        }
+        
+        pressures = current_data.get('pressures', [[]])
+        temperatures = current_data.get('temperatures', [[]])
+        
+        # Pressure safety checks
+        for i, p_data in enumerate(pressures):
+            if p_data:
+                current_pressure = np.mean(p_data)
+                max_pressure = current_pressure
+                min_pressure = current_pressure
+                
+                if max_pressure > self.pressure_limits['max']:
+                    safety_status['violations'].append(f"Pressure channel {i} exceeded maximum: {max_pressure:.1f} > {self.pressure_limits['max']}")
+                    safety_status['state'] = 'critical'
+                
+                if min_pressure < self.pressure_limits['min']:
+                    safety_status['violations'].append(f"Pressure channel {i} below minimum: {min_pressure:.1f} < {self.pressure_limits['min']}")
+                    safety_status['state'] = 'warning' if safety_status['state'] == 'normal' else safety_status['state']
+                
+                if trend_data and len(trend_data) > 1:
+                    pressure_rate = self._calculate_rate_of_change(trend_data, f'pressure_{i}')
+                    if abs(pressure_rate) > self.pressure_limits['rate_limit']:
+                        safety_status['violations'].append(f"Pressure rate limit exceeded: {pressure_rate:.2f} psi/s")
+                        safety_status['state'] = 'critical'
+        
+        # Temperature safety checks
+        for i, t_data in enumerate(temperatures):
+            if t_data:
+                current_temp = np.mean(t_data)
+                
+                if current_temp > self.temperature_limits['max']:
+                    safety_status['violations'].append(f"Temperature channel {i} exceeded maximum: {current_temp:.1f}°C")
+                    safety_status['state'] = 'critical'
+                
+                if current_temp < self.temperature_limits['min']:
+                    safety_status['violations'].append(f"Temperature channel {i} below minimum: {current_temp:.1f}°C")
+                    safety_status['state'] = 'warning' if safety_status['state'] == 'normal' else safety_status['state']
+        
+        # Predictive safety analysis
+        if trend_data:
+            predicted_violations = self._predict_safety_violations(trend_data)
+            safety_status['predicted_violations'] = predicted_violations
+            
+            if predicted_violations:
+                safety_status['state'] = 'warning' if safety_status['state'] == 'normal' else safety_status['state']
+        
+        # Execute safety actions based on state
+        if safety_status['state'] in ['critical', 'emergency_stop']:
+            actions = self._execute_emergency_procedures(safety_status['violations'])
+            safety_status['actions_taken'] = actions
+        
+        self.safety_state = safety_status['state']
+        return safety_status
+
+    def _execute_emergency_procedures(self, violations):
+        """Execute emergency shutdown procedures"""
+        actions = []
+        emergency_timestamp = time.time()
+        logging.critical(f"EMERGENCY SHUTDOWN TRIGGERED: {violations}")
+        
+        for valve in self.emergency_valves:
+            try:
+                valve.close()
+                actions.append(f"Emergency valve {valve.id} closed")
+            except Exception as e:
+                logging.error(f"Failed to close emergency valve {valve.id}: {e}")
+        
+        for interlock in self.safety_interlocks:
+            try:
+                interlock.activate()
+                actions.append(f"Safety interlock {interlock.id} activated")
+            except Exception as e:
+                logging.error(f"Failed to activate safety interlock {interlock.id}: {e}")
+        
+        return actions
+
+class CircularBuffer:
+    """High-performance circular buffer for continuous data acquisition"""
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.buffer = np.zeros(capacity)
+        self.head = 0
+        self.tail = 0
+        self.size = 0
+        self.lock = threading.Lock()
+
+    def append(self, data):
+        with self.lock:
+            if isinstance(data, (list, np.ndarray)):
+                for item in data:
+                    self._append_single(item)
+            else:
+                self._append_single(data)
+
+    def _append_single(self, item):
+        self.buffer[self.tail] = item
+        self.tail = (self.tail + 1) % self.capacity
+        if self.size < self.capacity:
+            self.size += 1
+        else:
+            self.head = (self.head + 1) % self.capacity`,
           language: "python"
         }
       },
