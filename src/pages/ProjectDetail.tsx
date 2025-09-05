@@ -2151,13 +2151,6 @@ const ProjectDetail = () => {
               {project.subtitle}
             </p>
             
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {project.tags.map((tag: string, index: number) => (
-                <Badge key={index} variant="outline" className="text-sm">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
 
             <Button 
               variant="outline" 
