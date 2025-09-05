@@ -15,7 +15,7 @@ const projectsData = {
     title: "Automated Valve Test Platform",
     subtitle: "High-Pressure, High-Temperature Testing System for Aerospace Applications",
     tags: [],
-    hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
+    hero: "./lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
       {
         type: "overview",
@@ -28,7 +28,7 @@ const projectsData = {
           { label: "Manual Variance", value: "2.3% to 7.8%" }
         ],
         image: {
-          src: "/lovable-uploads/86b80ba9-25f7-499c-95da-1e4d8d1511b8.png",
+          src: "./lovable-uploads/86b80ba9-25f7-499c-95da-1e4d8d1511b8.png",
           alt: "Automated Valve Test Platform - Initial test setup with valve components, pressure transducers, and sensor wiring arranged in testing tray for high-pressure aerospace valve testing",
           position: "right"
         }
@@ -38,7 +38,7 @@ const projectsData = {
         title: "Theoretical Background",
         content: "Understanding the complex material science underlying valve failure mechanisms became crucial to developing an effective automated testing solution that could detect the subtle signatures of degradation processes. At elevated temperatures, valve components experience time-dependent plastic deformation following Norton's power law, where the creep rate depends exponentially on temperature and follows a power relationship with stress magnitude.\n\nFor Inconel 718 valve seats operating at 180°C under typical aerospace loading conditions, creep rates of 10⁻⁸ s⁻¹ can accumulate to significant deformation over extended test durations, with the exponential temperature dependence meaning that small temperature variations can dramatically affect creep behavior and thus failure timing.\n\nRepeated thermal cycling induces alternating stress cycles due to differential thermal expansion between dissimilar materials commonly found in valve assemblies. This leads to low-cycle fatigue crack initiation after 10³-10⁴ cycles, following the Coffin-Manson relationship.",
         image: {
-          src: "/lovable-uploads/025a0eec-1e0e-43d8-ae59-443683cf3c02.png",
+          src: "./lovable-uploads/025a0eec-1e0e-43d8-ae59-443683cf3c02.png",
           alt: "Automated Valve Test Platform - Data acquisition software interface showing configuration menu for sensor setup, valve testing parameters, and real-time monitoring controls",
           position: "left"
         },
@@ -82,7 +82,7 @@ const projectsData = {
         title: "Steps & Methodology",
         content: "My approach to solving this multifaceted challenge began with comprehensive hardware architecture design, carefully selecting components based on performance requirements, environmental compatibility, integration capabilities, and long-term reliability under the extreme conditions encountered in aerospace valve testing.\n\n**Hardware Selection Process:**\n\nThe Omega PX309 pressure transducers were chosen after extensive analysis across temperature ranges and competitive evaluation against alternatives from Honeywell, Kulite, and Kistler, featuring a measurement range of 0-15,000 psi with ±0.25% full scale accuracy, temperature coefficient of ±0.02% FS/°C, and response time under 1 ms for 90% full scale deflection.\n\n**Calibration Protocol:**\n\nThe calibration protocol represented a critical aspect requiring meticulous attention to traceability and uncertainty analysis. I utilized NIST-traceable Fluke 719Pro pressure calibrators with ±0.025% accuracy, deriving calibration equations through weighted least-squares regression that accounted for measurement uncertainties at each calibration point.\n\n**Temperature Measurement:**\n\nType-K thermocouples were selected for their wide operating range, standardized response characteristics defined by NIST standards, and proven reliability in aerospace applications. Cold junction compensation was achieved through integrated circuit temperature sensors (AD590) with ±0.5°C accuracy.",
         image: {
-          src: "/lovable-uploads/7ca7784b-52b2-43fd-9fe0-970f628faa3a.png",
+          src: "./lovable-uploads/7ca7784b-52b2-43fd-9fe0-970f628faa3a.png",
           alt: "Automated Valve Test Platform - Advanced test chamber setup with multiple valve assemblies, green PCB control boards, and comprehensive sensor network for environmental testing",
           position: "right"
         },
@@ -117,7 +117,7 @@ const projectsData = {
         title: "Data & Results",
         content: "The data acquisition system selection involved extensive analysis of sampling rate requirements, channel count, resolution needs, and environmental compatibility. The National Instruments USB-6343 DAQ system provided 32 single-ended analog inputs with 16-bit resolution, maximum aggregate sampling rate of 500 kS/s, input voltage range of ±10V with programmable gain amplifiers, and built-in anti-aliasing filters.\n\n**Performance Achievements:**\n\n• Reduced measurement variance from 7.8% to 0.3%\n• Achieved continuous 24/7 operation capability\n• Implemented 1 Hz minimum sampling rate compliance\n• Eliminated operator fatigue-related errors\n• Achieved NIST-traceable calibration accuracy\n\n**System Capabilities:**\n\nThe 16-bit resolution provides theoretical measurement resolution of 1 part in 65,536, corresponding to 0.3 mV resolution over the ±10V input range, which translates to pressure resolution of approximately 0.08 psi when combined with sensor scaling factors. However, effective resolution is typically 2-3 bits less due to noise and environmental factors.",
         image: {
-          src: "/lovable-uploads/2933f505-0bd4-4e2e-b1ae-b2f3601c9c3c.png",
+          src: "./lovable-uploads/2933f505-0bd4-4e2e-b1ae-b2f3601c9c3c.png",
           alt: "Automated Valve Test Platform - INFICON Go Skeleton Leak Fixture testing system with digital display showing troubleshoot mode, test loops, and real-time pressure monitoring for aerospace valve testing",
           position: "left"
         },
@@ -418,7 +418,7 @@ class CircularBuffer:
         ],
         visual: {
           type: "image",
-          content: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png"
+          content: "./lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png"
         }
       }
     ]
@@ -431,7 +431,7 @@ class CircularBuffer:
     date: "2024",
     author: "Azarias Thomas",
     tags: ["CAD Design", "Vibration Isolation", "Robotics Integration", "INFICON", "Mass Spectrometry"],
-    hero: "/lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png",
+    hero: "./lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png",
     sections: [
       {
         type: "overview",
@@ -445,7 +445,7 @@ class CircularBuffer:
           { label: "Beam Deflection Limit", value: "±0.5 mm" }
         ],
         image: {
-          src: "/lovable-uploads/a3edee5c-541d-45dd-8405-95b6cf1e93ca.png",
+          src: "./lovable-uploads/a3edee5c-541d-45dd-8405-95b6cf1e93ca.png",
           alt: "INFICON Residual Gas Analyzer (RGA) sensor mounted on precision stand fixture, displaying the ultra-high vacuum mass spectrometer with its characteristic cylindrical ionization chamber, quadrupole analyzer assembly, and precision electron gun system. The robust mechanical design showcases the ultra-sensitive analytical instrumentation requiring vibration isolation for integration onto mobile robotic platforms.",
           position: "right"
         }
@@ -455,7 +455,7 @@ class CircularBuffer:
         title: "Theoretical Background",
         content: "RGA sensors operate on the principle of electron impact ionization mass spectrometry, where gas molecules are ionized by a controlled electron beam, accelerated through an electric field, and separated by mass-to-charge ratio using either quadrupole or magnetic sector analyzers. The measurement process requires maintaining ultra-high vacuum conditions (typically 10⁻⁸ to 10⁻¹² Torr) within the analyzer chamber, precise alignment of ion optics to maintain measurement accuracy, stable high-voltage power supplies for ion acceleration and detection, and vibration-free mounting to prevent mechanical modulation of the electron beam path.\n\n**Ion Beam Deflection Physics:**\n\nThe fundamental physics governing RGA operation created specific mechanical requirements that directly conflicted with the dynamic environment of legged locomotion. Ion beam deflection due to mechanical vibration follows a predictable relationship where even small accelerations can cause significant beam displacement.\n\n**Robot Dynamics and Vibration Sources:**\n\nQuadruped locomotion generates complex force patterns that depend on gait selection, terrain characteristics, payload distribution, and locomotion speed, with fundamental frequencies determined by stride frequency (typically 1-3 Hz) and higher harmonics extending well into the structural resonance range of precision instrumentation.",
         image: {
-          src: "/lovable-uploads/9e20303a-ba9b-4eda-83bc-7818701c529c.png",
+          src: "./lovable-uploads/9e20303a-ba9b-4eda-83bc-7818701c529c.png",
           alt: "3D rendering of Unitree Go2 quadruped robot showcasing its advanced mechanical design with brushless servo actuators, carbon fiber frame construction, and integrated IMU sensor package. The sophisticated legged locomotion platform features 12 degrees of freedom, enabling dynamic gaits while generating complex vibration patterns that challenge the integration of precision analytical instrumentation.",
           position: "left"
         },
@@ -493,7 +493,7 @@ class CircularBuffer:
         title: "Steps & Methodology",
         content: "My approach to solving this multifaceted engineering challenge began with comprehensive requirements analysis that established quantitative specifications for mechanical performance, vibration isolation, alignment stability, and system integration.\n\n**Design Requirements:**\n\n• Support of the 1.8 kg RGA sensor mass with safety factor of 4 under maximum acceleration conditions\n• Maintenance of sensor alignment within ±0.2° during all locomotion modes\n• Provision of adequate clearance for obstacle navigation with minimum ground clearance of 150 mm\n• Integration with existing robot mounting interfaces without modification to the base platform\n\n**Vibration Isolation Strategy:**\n\nThe mounting system design utilized a hierarchical isolation approach with primary isolation between the robot frame and mounting bracket, secondary isolation between the bracket and sensor housing, and tertiary isolation for critical internal components within the RGA system.\n\n**Mount Selection and Design:**\n\nThe primary isolation system employed four cylindrical elastomeric mounts (McMaster-Carr 60A durometer silicone) arranged in a symmetric pattern to provide uniform load distribution while minimizing coupling between translational and rotational vibration modes.",
         image: {
-          src: "/lovable-uploads/4baf8bed-13ba-4037-918d-01f192b28ffd.png",
+          src: "./lovable-uploads/4baf8bed-13ba-4037-918d-01f192b28ffd.png",
           alt: "Field deployment of the fully integrated RGA-equipped Unitree Go2 robotic system in rugged volcanic terrain, with project manager Dr. Andres Diaz demonstrating the successful real-world application. The image captures the sophisticated quadruped robot carrying the precision analytical payload in challenging environmental conditions, showcasing the robust mechanical integration and vibration isolation system performance.",
           position: "right"
         },
@@ -529,7 +529,7 @@ class CircularBuffer:
         title: "Data & Results",
         content: "For the 1.8 kg RGA payload, elastomeric mounts with combined stiffness of 8,500 N/m provided a natural frequency of 11 Hz, placing the system well into the isolation range for robot locomotion frequencies above 20 Hz while maintaining sufficient stiffness to prevent excessive static deflection under gravitational loading.\n\n**Performance Achievements:**\n\n• Achieved 20+ dB vibration attenuation above 15 Hz\n• Maintained beam alignment within ±0.1° during dynamic operation\n• Reduced beam deflection from 3.2 mm to 0.3 mm at 0.1g acceleration\n• Successfully isolated RGA resonance at 420 Hz from robot structural modes\n• Achieved measurement stability within ±2% during robot locomotion\n\n**Vibration Isolation Performance:**\n\nThe system demonstrated excellent isolation characteristics with the natural frequency at 11 Hz providing effective isolation for all locomotion-induced vibrations above 20 Hz. Modal analysis revealed proper separation between robot structural modes and the mounted RGA system.",
         image: {
-          src: "/lovable-uploads/d9c7cb87-c406-4026-9883-723462cec732.png",
+          src: "./lovable-uploads/d9c7cb87-c406-4026-9883-723462cec732.png",
           alt: "Alternative perspective of the integrated robotic analytical system showcasing the custom-engineered mounting platform and vibration isolation system. The image details the sophisticated mechanical interface between the precision RGA mass spectrometer and the Unitree Go2 chassis, highlighting the multi-layer elastomeric isolation mounts, structural reinforcement brackets, and optimized weight distribution for maintaining analytical precision during dynamic locomotion.",
           position: "left"
         },
@@ -954,7 +954,7 @@ class RGAMountingSystemDesign:
         ],
         visual: {
           type: "image",
-          content: "/lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png"
+          content: "./lovable-uploads/7e9814d1-b051-4b58-99a9-b57a50fe4738.png"
         }
       }
     ]
@@ -967,7 +967,7 @@ class RGAMountingSystemDesign:
     date: "2024",
     author: "Azarias Thomas",
     tags: ["ANSYS Fluent", "CFD Modeling", "LMS Virtual.Lab", "Simcenter", "Aerogators", "Combustion"],
-    hero: "/lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png",
+    hero: "./lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png",
     sections: [
       {
         type: "overview",
@@ -981,7 +981,7 @@ class RGAMountingSystemDesign:
           { label: "Metal Temperature", value: "<1450 K" }
         ],
         image: {
-          src: "/lovable-uploads/0def1be4-0ecb-4513-9ec2-6929d62df0e1.png",
+          src: "./lovable-uploads/0def1be4-0ecb-4513-9ec2-6929d62df0e1.png",
           alt: "UAV Propulsion Optimization - Advanced military aircraft featuring stealth technology and turbofan propulsion system during flight operations, demonstrating the sophisticated aerodynamic design principles and propulsion integration techniques applied in modern aerospace engineering for unmanned aerial vehicle applications",
           position: "right"
         }
@@ -991,7 +991,7 @@ class RGAMountingSystemDesign:
         title: "Theoretical Background",
         content: "The compressible flow physics in the intake and compressor sections exhibit strong sensitivity to Mach number effects, boundary layer development, and flow separation phenomena that directly influence pressure recovery, distortion patterns, and surge margin. The combustion processes in the primary zone involve turbulent mixing, chemical kinetics, heat release, and pollutant formation mechanisms that operate on timescales ranging from microseconds for elementary chemical reactions to milliseconds for turbulent mixing processes.\n\n**Turbomachinery Aerodynamics:**\n\nThe blade cooling requirements create intricate interactions between aerodynamic performance and thermal management, as cooling air extraction reduces cycle efficiency while inadequate cooling leads to material degradation and potential catastrophic failure. The exhaust nozzle design influences both thrust generation and acoustic signature.\n\n**Combustion Physics:**\n\nThe Eddy Dissipation Concept (EDC) with finite-rate chemistry using a reduced Jet-A mechanism specifically developed for gas turbine applications was employed. The EDC model was selected over simpler mixing-limited models due to its superior capability for predicting pollutant formation, particularly NOx species that form through both thermal and prompt mechanisms requiring detailed chemical kinetics representation.",
         image: {
-          src: "/lovable-uploads/acc3215f-9dc5-44be-8085-6269647d917a.png",
+          src: "./lovable-uploads/acc3215f-9dc5-44be-8085-6269647d917a.png",
           alt: "UAV Propulsion Optimization - High-fidelity ANSYS CFD simulation showing detailed pressure contour analysis of propeller blade aerodynamics with color-coded pressure distribution ranging from low (blue) to high (red) pressures, demonstrating the sophisticated computational fluid dynamics modeling techniques used to optimize blade geometry and performance characteristics for maximum thrust efficiency and reduced noise generation",
           position: "left"
         },
@@ -1037,7 +1037,7 @@ class RGAMountingSystemDesign:
           "AIAA S-119 - Turbomachinery Design Guidelines"
         ],
         image: {
-          src: "/lovable-uploads/f422b176-c050-4419-9acc-8c65c34f1679.png",
+          src: "./lovable-uploads/f422b176-c050-4419-9acc-8c65c34f1679.png",
           alt: "UAV Propulsion Optimization - Advanced CFD simulation of turbine impeller showing intricate flow analysis with pressure and velocity contours across the curved blade surfaces, illustrating the complex three-dimensional flow patterns and thermal gradients critical for optimizing turbomachinery performance, efficiency, and durability in small-scale jet engine applications for unmanned aerial vehicles",
           position: "right"
         },
@@ -1665,7 +1665,7 @@ class PropulsionSystemOptimizer:
         ],
         visual: {
           type: "image",
-          content: "/lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png"
+          content: "./lovable-uploads/8cf36141-768e-42d1-9dd6-1da18d8ddee5.png"
         }
       }
     ]
@@ -1678,14 +1678,14 @@ class PropulsionSystemOptimizer:
     date: "2024",
     author: "Azarias Thomas",
     tags: ["FFT Analysis", "Machine Learning", "Real-Time Detection", "NASA", "MSolo", "Lunar Mission"],
-    hero: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png",
+    hero: "./lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png",
     sections: [
       {
         type: "overview",
         title: "Context & Goal",
         content: "The development of reliable prognostic health management systems for space-qualified instrumentation represents one of the most technically demanding challenges in aerospace engineering, where the extreme consequences of component failure during lunar missions create requirements for unprecedented reliability prediction and early fault detection capabilities. During my involvement with NASA's MSolo (Mass Spectrometer Observing Lunar Operations) program, I encountered the formidable challenge of developing a comprehensive vibration-based fatigue detection system for a sophisticated mass spectrometer designed to operate autonomously on the lunar surface for extended periods.\n\nThe MSolo mass spectrometer represented a critical scientific instrument designed to analyze the composition of the lunar atmosphere and surface-released gases, providing essential data for understanding lunar geology, potential resource utilization, and the fundamental physics of airless body atmospheres. The instrument's mission-critical nature demanded extraordinary reliability, as failure during the lunar mission would not only compromise scientific objectives worth hundreds of millions of dollars but could potentially impact the safety and success of entire lunar surface operations.\n\nThe technical challenge was compounded by the unique operational environment of lunar surface missions, where mechanical components experience complex loading patterns arising from launch vibrations reaching 20g peak accelerations, thermal cycling between -230°C during lunar night and +120°C during lunar day, micrometeorite impacts generating high-frequency shock loading, and operational vibrations from mechanical pumps and sample handling mechanisms.",
         image: {
-          src: "/lovable-uploads/14efa7d6-1eb1-4d60-ab03-23f40b553d31.png",
+          src: "./lovable-uploads/14efa7d6-1eb1-4d60-ab03-23f40b553d31.png",
           alt: "NASA MSolo Mission Patch - Official INFICON mission insignia for the MPH RGA (Miniature Penning Hot-cathode Residual Gas Analyzer) liftoff project, featuring technology powering space exploration with detailed technical iconography including mass spectrometer components, molecular analysis symbols, and countdown elements, representing the sophisticated instrumentation designed for lunar surface atmospheric composition analysis and gas detection capabilities essential for understanding airless body physics and potential resource utilization",
           position: "right"
         },
@@ -1702,7 +1702,7 @@ class PropulsionSystemOptimizer:
         title: "Theoretical Background",
         content: "The fundamental physics governing fatigue failure in space-qualified instruments created an extraordinarily complex failure analysis problem where traditional reliability prediction methods proved inadequate for the unique combination of loading conditions, material behaviors at extreme temperatures, and operational requirements. Fatigue crack initiation and propagation in the mass spectrometer's critical components followed complex mechanisms governed by Paris' law relationships, where crack growth rates depend on stress intensity factor ranges that vary dramatically with temperature, loading frequency, and environmental conditions unique to the lunar environment.\n\n**Critical Component Analysis:**\n\nThe mass spectrometer's critical subcomponents presented distinct failure modes requiring specialized analysis approaches: the ion source assembly incorporating delicate filaments and focusing electrodes operating at high temperatures and subjected to thermal cycling stresses; the quadrupole analyzer with precision-machined rods requiring dimensional stability within nanometer tolerances while experiencing vibrational loading; the detector assembly incorporating electron multipliers and sensitive electronic components vulnerable to mechanical shock; and the vacuum system with turbomolecular pumps containing high-speed rotating components operating at temperatures far below terrestrial specifications.\n\n**Signal Processing Foundation:**\n\nThe Fast Fourier Transform implementation represented the foundation of the analysis framework, requiring sophisticated enhancement beyond standard FFT approaches to address the unique characteristics of fatigue-related vibration signatures. The implementation utilized overlapped windowing with Hann windows to minimize spectral leakage, zero-padding to improve frequency resolution in critical bands, and advanced averaging techniques to enhance signal-to-noise ratios for weak fatigue signatures embedded in operational noise.",
         image: {
-          src: "/lovable-uploads/a85953e7-3a7b-4014-bdf6-1fe73f721746.png",
+          src: "./lovable-uploads/a85953e7-3a7b-4014-bdf6-1fe73f721746.png",
           alt: "INFICON Transpector CPM Mass Spectrometer Laboratory Setup - Advanced analytical instrumentation system demonstrating the sophisticated laboratory configuration for NASA's MSolo mass spectrometer development, featuring high-precision vacuum chambers, pressure monitoring equipment, specialized gas handling systems, and comprehensive testing apparatus essential for validating space-qualified mass spectrometry components under controlled conditions, including the complex mechanical assemblies, electronic interfaces, and calibration standards required for lunar atmospheric analysis missions",
           position: "left"
         },
@@ -1741,7 +1741,7 @@ class PropulsionSystemOptimizer:
         title: "Steps & Methodology",
         content: "My approach to this multifaceted challenge began with comprehensive development of a machine learning-enhanced signal processing framework that could extract meaningful fatigue indicators from accelerometer data collected throughout the instrument's operational envelope. The system incorporated advanced digital signal processing techniques including wavelet transform analysis for time-frequency decomposition, spectral analysis using Welch's method with optimized windowing functions, statistical process control for baseline establishment and drift detection, and feature extraction algorithms specifically designed to identify the subtle signatures of incipient fatigue damage.\n\n**Component-Specific Monitoring Strategy:**\n\nThe monitoring system addressed four critical subsystems with distinct failure characteristics:\n\n• **Ion Source Assembly:** Monitored resonant frequencies at 125, 340, and 890 Hz with focus on filament mount stress concentrations and thermal cycling effects on tungsten-rhenium components operating at 1800-2200 K\n\n• **Quadrupole Analyzer:** Tracked frequencies at 78, 156, 234, and 412 Hz for molybdenum rod assemblies requiring nanometer-level dimensional stability and frequency stability within 1×10⁻⁶ tolerance\n\n• **Detector Assembly:** Monitored 92, 284, and 567 Hz signatures for Inconel 718 components with shock limits of 100g and vibration limits of 10g RMS\n\n• **Vacuum System:** Analyzed pump harmonics at 45, 180, 360, and 720 Hz for stainless steel 316L components with 12,000 RPM pump speeds and bearing life expectations of 10⁸ cycles\n\n**Environmental Loading Analysis:**\n\nThe system accounted for multiple loading environments including launch conditions with 600-second duration and 20g peak accelerations across dominant frequencies of 5, 15, 35, 80, and 200 Hz; lunar landing impacts with 180-second duration and 15g peaks; and lunar operational conditions with 14-day thermal cycles and continuous operational vibrations.",
         image: {
-          src: "/lovable-uploads/229290ad-acf1-4a7c-8cdc-4bccacb9c1ad.png",
+          src: "./lovable-uploads/229290ad-acf1-4a7c-8cdc-4bccacb9c1ad.png",
           alt: "Spacecraft Test Facility - Advanced thermal vacuum chamber and environmental testing facility showcasing the sophisticated infrastructure required for space-qualified instrumentation validation, featuring precision mechanical handling systems, controlled environmental chambers, and comprehensive monitoring equipment essential for simulating the extreme conditions of lunar surface operations including temperature cycling, vacuum exposure, and vibration testing protocols necessary for NASA's MSolo mass spectrometer mission preparation",
           position: "right"
         },
@@ -1803,7 +1803,7 @@ class PropulsionSystemOptimizer:
         title: "Impact & Takeaways",
         content: "The successful development and validation of the vibration-based fatigue detection system for NASA's MSolo Mass Spectrometer established new paradigms for autonomous health monitoring in space-qualified instrumentation. This project demonstrated that sophisticated machine learning algorithms can operate effectively in the extreme environments of space missions while providing critical early warning capabilities that could prevent catastrophic failures and mission loss.\n\n**Technical Innovation:**\n\n• **Advanced Signal Processing:** Pioneered the application of multi-scale wavelet analysis combined with traditional FFT techniques for detecting subtle fatigue signatures in space instruments\n• **Component-Specific Modeling:** Developed specialized monitoring approaches for four distinct subsystem types, each with unique failure mechanisms and environmental sensitivities\n• **Environmental Adaptation:** Created algorithms capable of maintaining performance across the extreme temperature ranges and loading conditions of lunar surface operations\n• **Predictive Capabilities:** Achieved 7-day advance warning for developing fatigue conditions, enabling proactive mission management and risk mitigation\n\n**Mission-Critical Impact:**\n\nThe system provides unprecedented insight into instrument health during extended lunar surface operations, where traditional maintenance and repair approaches are impossible. The early warning capability enables mission operators to adjust operational parameters, implement contingency procedures, or modify mission timelines to prevent catastrophic failures that could compromise multi-billion dollar exploration programs.\n\n**Future Space Applications:**\n\nThe methodologies and algorithms developed for MSolo have broader applications across NASA's space exploration portfolio, including Mars rovers, asteroid sample return missions, and deep space probes where autonomous health monitoring is essential for mission success.",
         image: {
-          src: "/lovable-uploads/ada67827-dd72-4a5e-aece-0158cc2f270b.png",
+          src: "./lovable-uploads/ada67827-dd72-4a5e-aece-0158cc2f270b.png",
           alt: "Space Shuttle Payload Bay Configuration - Interior view of a space shuttle cargo bay showcasing the complex payload integration setup for space-qualified scientific instruments, featuring precision mounting systems, thermal management infrastructure, electrical connections, and the sophisticated logistics required for deploying advanced mass spectrometry equipment like NASA's MSolo system to lunar destinations, demonstrating the intricate engineering and mission planning necessary for successful space-based scientific operations",
           position: "left"
         },
@@ -1818,7 +1818,7 @@ class PropulsionSystemOptimizer:
         ],
         visual: {
           type: "image",
-          content: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
+          content: "./lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
         }
       }
     ]
@@ -1831,7 +1831,7 @@ class PropulsionSystemOptimizer:
     date: "2024",
     author: "Azarias Thomas",
     tags: ["Stability Analysis", "Flight Dynamics", "Design Optimization", "CFD", "Wind Tunnel Testing"],
-    hero: "/lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
+    hero: "./lovable-uploads/000f98ca-15f2-4d60-a820-a33b989ababe.png",
     sections: [
        {
          type: "overview",
@@ -1845,7 +1845,7 @@ class PropulsionSystemOptimizer:
            { label: "Drag Reduction", value: "15%" }
          ],
          image: {
-           src: "/lovable-uploads/d85accaa-2d58-4dc6-a314-7ad65ddb945b.png",
+           src: "./lovable-uploads/d85accaa-2d58-4dc6-a314-7ad65ddb945b.png",
            alt: "CFD mesh analysis of UAV aircraft showing computational grid structure and aerodynamic parameters including efficiency, lift coefficient, and moment coefficient data for stability analysis",
            position: "right"
          }
@@ -1855,7 +1855,7 @@ class PropulsionSystemOptimizer:
          title: "Technical Methodology",
          content: "**Geometric Parametrization:**\n\nThe study employed systematic variations in tail configuration including horizontal tail positioning (conventional vs. T-tail configurations), vertical tail sizing (area and aspect ratio variations), fuselage-tail integration (different junction geometries and fairing shapes), and dihedral angles (impact on lateral stability characteristics).\n\n**Computational Analysis Framework:**\n\nAdvanced CFD simulations were conducted using high-fidelity Reynolds-Averaged Navier-Stokes (RANS) methods with SST k-ω turbulence modeling. The analysis included static stability derivative calculations, dynamic response analysis, control effectiveness evaluation, and trim condition assessments.",
          image: {
-           src: "/lovable-uploads/e20bcea9-8d8d-450a-b1e0-35edf8e18228.png",
+           src: "./lovable-uploads/e20bcea9-8d8d-450a-b1e0-35edf8e18228.png",
            alt: "Pressure contour and velocity streamline analysis comparing UAV aerodynamics at different angles of attack, showing top and bottom views with color-coded pressure distribution and flow visualization",
            position: "left"
          },
@@ -1914,13 +1914,13 @@ class PropulsionSystemOptimizer:
            { label: "Pareto Solutions", value: "15 optimal" }
          ],
          image: {
-           src: "/lovable-uploads/6f53696a-ff0b-472d-b75b-0cb0b4fabdae.png",
+           src: "./lovable-uploads/6f53696a-ff0b-472d-b75b-0cb0b4fabdae.png",
            alt: "Professional wind tunnel testing facility with large circular test section and measurement arrays for aerodynamic validation and experimental verification of UAV designs",
            position: "right"
          },
          visual: {
            type: "image",
-           content: "/lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
+           content: "./lovable-uploads/d1e74099-500d-4c46-a984-3fbe6f55a551.png"
          }
        }
     ]
