@@ -78,7 +78,6 @@ export default {
 			fontFamily: {
 				'disclaimer': ['IBM Plex Serif', 'serif'],
 			},
-			},
 			keyframes: {
 				'accordion-down': {
 					from: { height: '0' },
