@@ -17,6 +17,13 @@ const Footer = () => {
   return (
     <footer className="py-12 section-padding border-t border-border">
       <div className="container-max">
+        {/* Disclaimer */}
+        <div className="mb-8 p-6 bg-muted/50 rounded-lg border border-border">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            <strong className="text-foreground">Disclaimer:</strong> The technical specifications, proprietary data, quantitative results, methodologies, and specific job duties presented in this portfolio have been omitted, modified, or generalized due to intellectual property restrictions and non-disclosure agreement obligations. Project images, descriptions, technologies used, and general outcomes are presented for portfolio demonstration purposes. All work samples comply with confidentiality requirements while showcasing relevant skills and experience.
+          </p>
+        </div>
+
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo and Copyright */}
           <div className="flex items-center gap-8">
